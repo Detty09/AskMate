@@ -1,0 +1,12 @@
+<Files "config.json">
+    Require all denied
+</Files>
+
+RewriteEngine On
+
+# If the requested file or directory exists, serve it as-is
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Otherwise, send everything to index.php
+RewriteRule ^ index.php [QSA,L]

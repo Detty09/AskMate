@@ -1,0 +1,10 @@
+[2025-09-10 18:00:05] info: Application started
+[2025-09-10 18:00:05] error: Database connection failed{"db":"mysql"}
+[2025-09-10 18:00:07] info: Application started
+[2025-09-10 18:00:07] error: Database connection failed{"db":"mysql"}
+[2025-09-10 18:16:01] info: Application started
+[2025-09-10 18:16:01] error: Database connection failed{"db":"mysql"}
+[2025-09-15 07:26:53] info: Application started
+[2025-09-15 07:26:53] error: Database connection failed{"db":"mysql"}
+[2025-09-18 18:11:26] info: Application started
+[2025-09-18 18:11:26] error: Database connection failed{"db":"mysql"}
