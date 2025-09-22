@@ -1,0 +1,26 @@
+<?php $_shouldextend[1]=1; ?>
+
+<?php $this->startSection('title', 'Register'); ?>
+
+<?php $this->startSection('content'); ?>
+ <h1>Register now!</h1>
+ <form action="/register" method="POST">
+ <div>
+ <div>
+ <label for="email">Email Address:</label>
+ <input type="email" name="email" placeholder="user@example.com">
+ </div>
+ <div>
+ <label for="email_confirmation">Confirm Email:</label>
+ <input type="email" name="email_confirmation" placeholder="user@example.com">
+ </div>
+ <div>
+ <label for="password">Password:</label>
+ <input type="password" name="password">
+ </div>
+ </div>
+
+ <button type="submit">Register</button>
+ </form>
+<?php $this->stopSection(); ?>
+<?php if (isset($_shouldextend[1])) { echo $this->runChild('layouts.main'); } ?>
