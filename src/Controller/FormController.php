@@ -26,7 +26,7 @@ class FormController {
     public function submitQuestion(): void {
         $title = SuperGlobalManager::getRequest("question-title");
         $message = SuperGlobalManager::getRequest("question-message");
-        $userId = 1; //Should be replaced from session
+        $userId = SuperGlobalManager::getSession("user_id");
 
         $question = new Question($userId, $title, $message);
         $this->questionRepository->save($question);
