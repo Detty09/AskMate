@@ -13,10 +13,9 @@ class FormController {
     private $blade;
     private QuestionRepository $questionRepository;
 
-    public function __construct() {
-        $this->blade = BladeFactory::getBlade();
-        $pdo = Connection::getConnection();
-        $this->questionRepository = new QuestionRepository($pdo);
+    public function __construct($blade, $questionRepository) {
+        $this->blade = $blade;
+        $this->questionRepository = $questionRepository;
     }
 
     public function showForm(): void {

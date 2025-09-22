@@ -4,28 +4,47 @@ namespace App\Controller;
 
 use App\Repository\QuestionRepository;
 use App\Repository\AnswerRepository;
+use App\Http\SuperGlobalManager;
+use App\View\BladeFactory;
+use eftec\bladeone\BladeOne;
 
 class QuestionController
 {
+    private BladeOne $blade;
+
     private QuestionRepository $repository;
     private AnswerRepository $answerRepository;
 
-    public function __construct(QuestionRepository $repository, AnswerRepository $answerRepository) {
+    public function __construct(BladeOne $blade, QuestionRepository $repository, AnswerRepository $answerRepository) {
+        $this->blade = $blade;
         $this->repository = $repository;
         $this->answerRepository = $answerRepository;
     }
 
-    public function show($blade, int $id, AnswerRepository $answerRepository): string
+    public function show(int $id, AnswerRepository $answerRepository): string
     {
        $question = $this->repository->find($id);
         if (!$question) {
             http_response_code(404);
-            return $blade->run('displayquestion', ['question' => null]);
+            return $this->blade->run('displayquestion', ['question' => null]);
         }
         $answers = $answerRepository->findByQuestionId($id);
-        return $blade->run('displayquestion', ['question' => $question
+        return $this->blade->run('displayquestion', ['question' => $question
         , 'answers' => $answers]);
     }
 
+    /*
+    public function listUserQuestions(): void {
+        $userId = SuperGlobalManager::getSession("user_id");
+        if (!$userId) {
+            header("Location: /home");
+            exit;
+        }
 
+        $questions = $this->repository->findByUser($userId);
+
+        echo $this->blade->run();
+    }
+
+    */
 }

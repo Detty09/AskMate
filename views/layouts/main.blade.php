@@ -5,10 +5,11 @@
 </head>
 <body>
 <nav>
-    <a href="/home">Home</a> |
-    <a href="/add-question">Add Question</a>
+    <a href="/home">Home</a>
 
     @if(isset($_SESSION['user_id']))
+        <a href="/add-question">Add Question</a>
+        <a href="/my-questions">My Questions</a>
         <a href="/logout" methods="POST">Logout</a>
     @else
         <a href="/login">Login</a>

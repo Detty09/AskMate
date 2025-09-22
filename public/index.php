@@ -4,22 +4,28 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 use App\Controller\FormController;
 use App\Controller\UserController;
+use App\Controller\QuestionController;
 use App\Database\Connection;
 use App\Http\Router;
 use App\Http\SuperGlobalManager;
 use App\Model\User;
 use App\Repository\UserRepository;
+use App\Repository\QuestionRepository;
+use App\Repository\AnswerRepository;
 use App\Security\FilterManager;
 use App\View\BladeFactory;
 
-$pdo = \App\Database\Connection::getConnection();
-$repository = new \App\Repository\QuestionRepository($pdo);
-$answerRepository = new \App\Repository\AnswerRepository($pdo);
-$QuestionController = new \App\Controller\QuestionController($repository, $answerRepository);
+
 
 session_start();
-
+$pdo = Connection::getConnection();
 $blade = BladeFactory::getBlade();
+$questionRepository = new QuestionRepository($pdo);
+$answerRepository = new AnswerRepository($pdo);
+$QuestionController = new QuestionController($blade, $questionRepository, $answerRepository);
+
+$formController = new FormController($blade, $questionRepository);
+
 $userRepository = new UserRepository(Connection::getConnection());
 $userController = new UserController($blade, $userRepository);
 
@@ -44,18 +50,12 @@ $router->get("/home", function() use ($blade) {
 $router->get("/display", function() use ($blade) {
     global $QuestionController, $answerRepository;
     $id = isset($_GET['id']) ? (int)$_GET['id'] : null;
-    echo $QuestionController->show($blade, $id, $answerRepository);
+    echo $QuestionController->show($id, $answerRepository);
 });
 
-$formController = new FormController();
+//Add question
 $router->get("/add-question", [$formController, "showForm"]);
 $router->post("/submit-question", [$formController, "submitQuestion"]);
-
-$router->post("/submit", function() use ($blade) {
-    $value = SuperGlobalManager::getRequest("value", "default");
-    SuperGlobalManager::setSession("submitted value", $value);
-    echo "Form submitted! You sent: " . htmlspecialchars($value);
-});
 
 //Register
 $router->get("/register", function () use ($blade) {
@@ -114,5 +114,8 @@ $router->get("/logout", function() use ($blade) {
     session_destroy();
     exit;
 });
+
+//My questions
+//$router->get("/my-questions", [$QuestionController, "listUserQuestions"] );
 
 $router->dispatch($_SERVER["REQUEST_METHOD"], $_SERVER["REQUEST_URI"]);
