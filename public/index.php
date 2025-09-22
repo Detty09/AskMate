@@ -9,7 +9,8 @@ use App\Http\SuperGlobalManager;
 
 $pdo = \App\Database\Connection::getConnection();
 $repository = new \App\Classes\Question($pdo);
-$QuestionController = new \App\Controllers\QuestionController($repository);
+$answerRepository = new \App\Classes\Answer($pdo);
+$QuestionController = new \App\Controllers\QuestionController($repository, $answerRepository);
 
 session_start();
 
@@ -35,9 +36,9 @@ $router->get("/home", function() use ($blade) {
 
 
 $router->get("/display", function() use ($blade) {
-    global $QuestionController;
+    global $QuestionController, $answerRepository;
     $id = isset($_GET['id']) ? (int)$_GET['id'] : null;
-    echo $QuestionController->show($blade, $id);
+    echo $QuestionController->show($blade, $id, $answerRepository);
 });
 
 $router->post("/submit", function() use ($blade) {
