@@ -8,15 +8,15 @@
         <div>
             <div>
                 <label for="email">Email Address:</label>
-                <input type="email" name="email" placeholder="user@example.com">
+                <input type="email" name="email" placeholder="user@example.com" required>
             </div>
             <div>
                 <label for="email_confirmation">Confirm Email:</label>
-                <input type="email" name="email_confirmation" placeholder="user@example.com">
+                <input type="email" name="email_confirmation" placeholder="user@example.com" required>
             </div>
             <div>
                 <label for="password">Password:</label>
-                <input type="password" name="password">
+                <input type="password" name="password" required>
             </div>
         </div>
 

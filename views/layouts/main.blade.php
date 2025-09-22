@@ -5,11 +5,12 @@
 </head>
 <body>
 <nav>
-    <a href="/home">Home</a> |
-    <a href="/add-question">Add Question</a>
+    <a href="/">Home</a> |
 
-    @if(isset($_SESSION['user_id']))
-        <a href="/logout" methods="POST">Logout</a>
+    @if(\App\Http\SuperGlobalManager::hasSession('user_id'))
+        <a href="/add-question">Add Question</a>
+        <a href="/users">List Users</a>
+        <a href="/logout">Logout</a>
     @else
         <a href="/login">Login</a>
         <a href="/register">Register</a>
