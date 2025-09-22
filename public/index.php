@@ -12,10 +12,7 @@ use App\Repository\UserRepository;
 use App\Security\FilterManager;
 use App\View\BladeFactory;
 
-$pdo = \App\Database\Connection::getConnection();
-$repository = new \App\Repository\QuestionRepository($pdo);
-$answerRepository = new \App\Repository\AnswerRepository($pdo);
-$QuestionController = new \App\Controller\QuestionController($repository, $answerRepository);
+$QuestionController = new \App\Controller\QuestionController();
 
 session_start();
 
@@ -42,9 +39,19 @@ $router->get("/home", function() use ($blade) {
 });
 
 $router->get("/display", function() use ($blade) {
-    global $QuestionController, $answerRepository;
-    $id = isset($_GET['id']) ? (int)$_GET['id'] : null;
-    echo $QuestionController->show($blade, $id, $answerRepository);
+    global $QuestionController;
+    if (!isset($_GET['id']) || !is_numeric($_GET['id']) || (int)$_GET['id'] <= 0) {
+        http_response_code(404);
+        echo $blade->run('displayquestion', ['question' => null, 'answers' => []]);
+        return;
+    }
+
+    $id = (int)$_GET['id'];
+    echo $QuestionController->show($blade, $id);
+});
+
+$router->get("/add-answer", function() use ($blade) {
+    echo $blade->run("answer_form");;
 });
 
 $formController = new FormController();
