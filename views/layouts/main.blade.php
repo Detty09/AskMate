@@ -6,7 +6,8 @@
 <body>
 <nav>
     <a href="/home">Home</a> |
-    <a href="/about">About</a>
+    <a href="/add-question">Add Question</a>
+    <a href="/register">Register</a>
 </nav>
 
 <main>
