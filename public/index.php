@@ -3,21 +3,33 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use App\Controller\FormController;
+use App\Controller\UserController;
+use App\Controller\QuestionController;
 use App\Database\Connection;
 use App\Http\Router;
 use App\Http\SuperGlobalManager;
+use App\Model\User;
+use App\Repository\UserRepository;
+use App\Repository\QuestionRepository;
+use App\Repository\AnswerRepository;
 use App\Security\FilterManager;
 use App\View\BladeFactory;
 
-$pdo = Connection::getConnection();
-$QuestionController = new \App\Controller\QuestionController();
-$AnswerController = new \App\Controller\AnswerController();
+
 
 session_start();
-
+$pdo = Connection::getConnection();
 $blade = BladeFactory::getBlade();
-$userRepository = new \App\Repository\UserRepository($pdo);
-$userController = new \App\Controller\UserController($blade ,$userRepository);
+$questionRepository = new QuestionRepository($pdo);
+$answerRepository = new AnswerRepository($pdo);
+$QuestionController = new QuestionController($blade, $questionRepository, $answerRepository);
+
+$formController = new FormController($blade, $questionRepository);
+
+$AnswerController = new \App\Controller\AnswerController();
+
+$userRepository = new UserRepository($pdo);
+$userController = new UserController($blade ,$userRepository);
 
 $filter = new FilterManager([
     "methods" => ["GET", "POST"],
@@ -32,7 +44,7 @@ if (!$filter->checkAll($_SERVER["REQUEST_METHOD"], $_SERVER["REMOTE_ADDR"], $_SE
 
 $router = new Router();
 
-$router->get("/", function() use ($blade) {
+$router->get("/home", function() use ($blade) {
     $name = $_SESSION['email'] ?? "Guest";
     echo $blade->run("home", ["name" => $name]);
 });
@@ -62,15 +74,9 @@ $router->get("/add-answer", function() use ($blade, $QuestionController) {
 });
 $router->post("/submit-answer", [$AnswerController, "submitAnswer"]);
 
-$formController = new FormController();
+//Add question
 $router->get("/add-question", [$formController, "showForm"]);
 $router->post("/submit-question", [$formController, "submitQuestion"]);
-
-$router->post("/submit", function() use ($blade) {
-    $value = SuperGlobalManager::getRequest("value", "default");
-    SuperGlobalManager::setSession("submitted value", $value);
-    echo "Form submitted! You sent: " . htmlspecialchars($value);
-});
 
 //Register
 $router->get("/register", [$userController, 'create']);

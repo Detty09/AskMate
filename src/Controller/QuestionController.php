@@ -5,16 +5,21 @@ namespace App\Controller;
 use App\Database\Connection;
 use App\Repository\QuestionRepository;
 use App\Repository\AnswerRepository;
+use App\Http\SuperGlobalManager;
+use App\View\BladeFactory;
+use eftec\bladeone\BladeOne;
 
 class QuestionController
 {
+    private BladeOne $blade;
+
     private QuestionRepository $repository;
     private AnswerRepository $answerRepository;
 
-    public function __construct() {
-        $pdo = Connection::getConnection();
-        $this->repository = new QuestionRepository($pdo);
-        $this->answerRepository = new AnswerRepository($pdo);
+    public function __construct(BladeOne $blade, QuestionRepository $repository, AnswerRepository $answerRepository) {
+        $this->blade = $blade;
+        $this->repository = $repository;
+        $this->answerRepository = $answerRepository;
     }
 
     public function show($blade, int $id): string
@@ -30,5 +35,18 @@ class QuestionController
         , 'answers' => $answers]);
     }
 
+    /*
+    public function listUserQuestions(): void {
+        $userId = SuperGlobalManager::getSession("user_id");
+        if (!$userId) {
+            header("Location: /home");
+            exit;
+        }
 
+        $questions = $this->repository->findByUser($userId);
+
+        echo $this->blade->run();
+    }
+
+    */
 }

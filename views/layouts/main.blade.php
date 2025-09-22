@@ -9,6 +9,7 @@
 
     @if(\App\Http\SuperGlobalManager::hasSession('user_id'))
         <a href="/add-question">Add Question</a>
+        <a href="/my-questions">My Questions</a>
         <a href="/users">List Users</a>
         <a href="/logout">Logout</a>
     @else
