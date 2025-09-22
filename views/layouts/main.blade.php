@@ -6,6 +6,7 @@
 <body>
 <nav>
     <a href="/home">Home</a> |
+    <a href="/add-question">Add Question</a>
 
     @if(isset($_SESSION['user_id']))
         <a href="/logout" methods="POST">Logout</a>
