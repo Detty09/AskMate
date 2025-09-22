@@ -2,20 +2,20 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
+use App\Controller\FormController;
 use App\Controller\UserController;
 use App\Database\Connection;
 use App\Http\Router;
+use App\Http\SuperGlobalManager;
 use App\Model\User;
 use App\Repository\UserRepository;
-use App\View\BladeFactory;
 use App\Security\FilterManager;
-use App\Http\SuperGlobalManager;
-use App\Controller\FormController;
+use App\View\BladeFactory;
 
 $pdo = \App\Database\Connection::getConnection();
-$repository = new \App\Classes\Question($pdo);
-$answerRepository = new \App\Classes\Answer($pdo);
-$QuestionController = new \App\Controllers\QuestionController($repository, $answerRepository);
+$repository = new \App\Repository\QuestionRepository($pdo);
+$answerRepository = new \App\Repository\AnswerRepository($pdo);
+$QuestionController = new \App\Controller\QuestionController($repository, $answerRepository);
 
 session_start();
 
@@ -41,21 +41,20 @@ $router->get("/home", function() use ($blade) {
     echo $blade->run("home", ["name" => $name]);
 });
 
-
-$formController = new FormController();
-$router->get("/add-question", [$formController, "showForm"]);
-$router->post("/submit-question", [$formController, "submitQuestion"]);
-
-
-//Register
-$router->get("/register", function () use ($blade) {
-    echo $blade->run("register");
-
 $router->get("/display", function() use ($blade) {
     global $QuestionController, $answerRepository;
     $id = isset($_GET['id']) ? (int)$_GET['id'] : null;
     echo $QuestionController->show($blade, $id, $answerRepository);
 });
+
+$formController = new FormController();
+$router->get("/add-question", [$formController, "showForm"]);
+$router->post("/submit-question", [$formController, "submitQuestion"]);
+
+//Register
+$router->get("/register", function () use ($blade) {
+    echo $blade->run("register");
+    });
 
 $router->post("/submit", function() use ($blade) {
     $value = SuperGlobalManager::getRequest("value", "default");

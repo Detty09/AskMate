@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Classes;
+namespace App\Repository;
 
-use App\Repository\RepositoryInterface;
 use PDO;
-class Answer implements RepositoryInterface
+
+class AnswerRepository implements RepositoryInterface
 {
     private PDO $pdo;
     public function __construct(PDO $pdo)

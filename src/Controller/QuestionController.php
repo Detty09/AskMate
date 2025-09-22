@@ -1,21 +1,21 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Controller;
 
-use App\Classes\Answer;
-use App\Classes\Question;
+use App\Repository\QuestionRepository;
+use App\Repository\AnswerRepository;
 
 class QuestionController
 {
-    private Question $repository;
-    private Answer $answerRepository;
+    private QuestionRepository $repository;
+    private AnswerRepository $answerRepository;
 
-    public function __construct(Question $repository, Answer $answerRepository) {
+    public function __construct(QuestionRepository $repository, AnswerRepository $answerRepository) {
         $this->repository = $repository;
         $this->answerRepository = $answerRepository;
     }
 
-    public function show($blade, int $id, Answer $answerRepository): string
+    public function show($blade, int $id, AnswerRepository $answerRepository): string
     {
        $question = $this->repository->find($id);
         if (!$question) {

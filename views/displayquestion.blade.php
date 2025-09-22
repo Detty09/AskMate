@@ -6,9 +6,9 @@
 @section('content')
     @if($question)
         <h1>Question</h1>
-    <h5>Title: {{ $question->title }}</h5>
+    <h3>Title: {{ $question->title }}</h3>
     <p>Details: {{ $question->message }}</p>
-        <h5>Answers:</h5>
+        <h3>Answers:</h3>
         @if (count($answers) > 0)
         <ul>
             @foreach($answers as $answer)
