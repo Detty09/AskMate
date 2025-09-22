@@ -21,4 +21,5 @@ class BladeFactory {
         }
         return self::$blade;
     }
+
 }
