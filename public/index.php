@@ -7,6 +7,10 @@ use App\View\BladeFactory;
 use App\Security\FilterManager;
 use App\Http\SuperGlobalManager;
 
+$pdo = \App\Database\Connection::getConnection();
+$repository = new \App\Classes\Question($pdo);
+$QuestionController = new \App\Controllers\QuestionController($repository);
+
 session_start();
 
 $blade = BladeFactory::getBlade();
@@ -27,6 +31,13 @@ $router = new Router();
 $router->get("/home", function() use ($blade) {
     $name = "Boti";
     echo $blade->run("home", ["name" => $name]);
+});
+
+
+$router->get("/display", function() use ($blade) {
+    global $QuestionController;
+    $id = isset($_GET['id']) ? (int)$_GET['id'] : null;
+    echo $QuestionController->show($blade, $id);
 });
 
 $router->post("/submit", function() use ($blade) {
