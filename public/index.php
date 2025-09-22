@@ -10,6 +10,7 @@ use App\Repository\UserRepository;
 use App\View\BladeFactory;
 use App\Security\FilterManager;
 use App\Http\SuperGlobalManager;
+use App\Controller\FormController;
 
 session_start();
 
@@ -35,11 +36,11 @@ $router->get("/home", function() use ($blade) {
     echo $blade->run("home", ["name" => $name]);
 });
 
-$router->post("/submit", function() use ($blade) {
-    $value = SuperGlobalManager::getRequest("value", "default");
-    SuperGlobalManager::setSession("submitted value", $value);
-    echo "Form submitted! You sent: " . htmlspecialchars($value);
-});
+
+$formController = new FormController();
+$router->get("/add-question", [$formController, "showForm"]);
+$router->post("/submit-question", [$formController, "submitQuestion"]);
+
 
 //Register
 $router->get("/register", function () use ($blade) {
@@ -62,5 +63,6 @@ $router->post("/register", function() use ($blade, $userRepository) {
 
     echo $blade->run("home");
 });
+
 
 $router->dispatch($_SERVER["REQUEST_METHOD"], $_SERVER["REQUEST_URI"]);
