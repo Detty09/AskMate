@@ -30,7 +30,7 @@ class FormController {
         $question = new Question($userId, $title, $message);
         $this->questionRepository->save($question);
 
-        header("Location: /home");
+        header("Location: /");
         exit;
     }
 }
