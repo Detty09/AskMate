@@ -26,8 +26,10 @@ $QuestionController = new QuestionController($blade, $questionRepository, $answe
 
 $formController = new FormController($blade, $questionRepository);
 
-$userRepository = new UserRepository(Connection::getConnection());
-$userController = new UserController($blade, $userRepository);
+$AnswerController = new \App\Controller\AnswerController();
+
+$userRepository = new UserRepository($pdo);
+$userController = new UserController($blade ,$userRepository);
 
 $filter = new FilterManager([
     "methods" => ["GET", "POST"],
@@ -48,74 +50,44 @@ $router->get("/home", function() use ($blade) {
 });
 
 $router->get("/display", function() use ($blade) {
-    global $QuestionController, $answerRepository;
-    $id = isset($_GET['id']) ? (int)$_GET['id'] : null;
-    echo $QuestionController->show($id, $answerRepository);
+    global $QuestionController;
+    if (!isset($_GET['id']) || !is_numeric($_GET['id']) || (int)$_GET['id'] <= 0) {
+        http_response_code(404);
+        echo $blade->run('displayquestion', ['question' => null, 'answers' => []]);
+        return;
+    }
+
+    $id = (int)$_GET['id'];
+    echo $QuestionController->show($blade, $id);
 });
+
+$router->get("/add-answer", function() use ($blade, $QuestionController) {
+    $id = $_SESSION['current_id_question'] ?? 0;
+
+    if ($id <= 0 || !$QuestionController->show($blade, (int)$id)) {
+        http_response_code(404);
+        echo $blade->run('displayquestion', ['question' => null, 'answers' => []]);
+        return;
+    }
+
+    echo $blade->run('answer_form', ['id_question' => $id]);
+});
+$router->post("/submit-answer", [$AnswerController, "submitAnswer"]);
 
 //Add question
 $router->get("/add-question", [$formController, "showForm"]);
 $router->post("/submit-question", [$formController, "submitQuestion"]);
 
 //Register
-$router->get("/register", function () use ($blade) {
-    echo $blade->run("register");
-    });
+$router->get("/register", [$userController, 'create']);
+$router->post("/register", [$userController, 'store']);
 
-$router->post("/register", function() use ($blade, $userRepository) {
-    $email = $_POST['email'];
-    $confirmEmail = $_POST['email_confirmation'];
+//Login / Logout
+$router->get('/login', [$userController, 'loginPage']);
+$router->post('/login', [$userController, 'login']);
+$router->get("/logout", [$userController, 'logout']);
 
-    if ($email !== $confirmEmail) {
-        echo 'Emails do not match';
-        return;
-    }
-
-    $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-    $user = new User($email, $password);
-
-    $userRepository->save($user);
-
-    echo $blade->run("home");
-});
-
-//Login
-$router->get('/login', function() use ($blade) {
-    echo $blade->run("login");
-});
-
-$router->post("/login", function() use ($blade, $userRepository) {
-    $email = $_POST['email'];
-    $password = $_POST['password'];
-
-    //Fetch user from DB
-    $user = $userRepository->findByEmail($email);
-    if (!$user) {
-        echo $blade->run("login", ['error' => 'Invalid email or password']);
-        return;
-    }
-    //verify pw
-    if (password_verify($password, $user->password_hash)) {
-        session_regenerate_id();
-        $_SESSION['user_id'] = $user->id;
-        $_SESSION['email'] = $user->email;
-
-        header('Location: /home');
-        exit;
-    } else {
-        echo $blade->run("login", ['error' => 'Invalid email or password']);
-    }
-});
-
-$router->get("/logout", function() use ($blade) {
-    unset($_SESSION['user_id']);
-    unset($_SESSION['email']);
-    header('Location: /home');
-    session_destroy();
-    exit;
-});
-
-//My questions
-//$router->get("/my-questions", [$QuestionController, "listUserQuestions"] );
+//User List
+$router->get('/users', [$userController, 'index']);
 
 $router->dispatch($_SERVER["REQUEST_METHOD"], $_SERVER["REQUEST_URI"]);

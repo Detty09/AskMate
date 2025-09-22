@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Database\Connection;
 use App\Repository\QuestionRepository;
 use App\Repository\AnswerRepository;
 use App\Http\SuperGlobalManager;
@@ -21,15 +22,16 @@ class QuestionController
         $this->answerRepository = $answerRepository;
     }
 
-    public function show(int $id, AnswerRepository $answerRepository): string
+    public function show($blade, int $id): string
     {
        $question = $this->repository->find($id);
         if (!$question) {
             http_response_code(404);
-            return $this->blade->run('displayquestion', ['question' => null]);
+            return $blade->run('displayquestion', ['question' => null, 'answers' => []]);
         }
-        $answers = $answerRepository->findByQuestionId($id);
-        return $this->blade->run('displayquestion', ['question' => $question
+        $_SESSION['current_id_question'] = $id;
+        $answers = $this->answerRepository->findByQuestionId($id);
+        return $blade->run('displayquestion', ['question' => $question
         , 'answers' => $answers]);
     }
 
