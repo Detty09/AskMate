@@ -18,10 +18,16 @@ class QuestionRepository implements RepositoryInterface {
         // TODO: Implement findAll() method.
     }
 
-    public function find(int $id): object
+    public function find(int $id): ?object
     {
-        // TODO: Implement find() method.
+        $sql = 'SELECT * FROM question  WHERE id = :id';
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([':id' => $id]);
+
+        $result = $stmt->fetch(PDO::FETCH_OBJ);
+        return $result ?: null;
     }
+
 
     public function save(object $entity): void
     {
