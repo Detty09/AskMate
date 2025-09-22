@@ -2,6 +2,8 @@
 
 namespace App\Repository;
 
+use App\Model\Answer;
+use App\Model\Question;
 use PDO;
 
 class AnswerRepository implements RepositoryInterface
@@ -33,7 +35,20 @@ class AnswerRepository implements RepositoryInterface
 
     public function save(object $entity): void
     {
-        // TODO: Implement save() method.
+        if (!$entity instanceof Answer) {
+            throw new \InvalidArgumentException("Expected an Answer instance");
+        }
+
+        $stmt = $this->pdo->prepare("
+            INSERT INTO answer (id_registered_user, id_question, message, vote_number) 
+            VALUES (:id_registered_user, :id_question, :message, :vote_number)");
+
+        $stmt->execute([
+            "id_registered_user" => $entity->id_registered_user,
+            "id_question" => $entity->id_question,
+            "message" => $entity->message,
+            "vote_number" => $entity->vote_number
+        ]);
     }
 
     public function update(object $entity): void

@@ -18,8 +18,9 @@
         @else
             <p>No answers yet.</p>
             @endif
+        <a href="/add-answer">Add answer</a>
     @else
         <h1>Question not found</h1>
     @endif
-    <a href="/add-answer">Add answer</a>
+
 @endsection

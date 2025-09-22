@@ -13,6 +13,7 @@ use App\Security\FilterManager;
 use App\View\BladeFactory;
 
 $QuestionController = new \App\Controller\QuestionController();
+$AnswerController = new \App\Controller\AnswerController();
 
 session_start();
 
@@ -50,9 +51,18 @@ $router->get("/display", function() use ($blade) {
     echo $QuestionController->show($blade, $id);
 });
 
-$router->get("/add-answer", function() use ($blade) {
-    echo $blade->run("answer_form");;
+$router->get("/add-answer", function() use ($blade, $QuestionController) {
+    $id = $_SESSION['current_id_question'] ?? 0;
+
+    if ($id <= 0 || !$QuestionController->show($blade, (int)$id)) {
+        http_response_code(404);
+        echo $blade->run('displayquestion', ['question' => null, 'answers' => []]);
+        return;
+    }
+
+    echo $blade->run('answer_form', ['id_question' => $id]);
 });
+$router->post("/submit-answer", [$AnswerController, "submitAnswer"]);
 
 $formController = new FormController();
 $router->get("/add-question", [$formController, "showForm"]);

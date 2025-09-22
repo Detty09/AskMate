@@ -24,6 +24,7 @@ class QuestionController
             http_response_code(404);
             return $blade->run('displayquestion', ['question' => null, 'answers' => []]);
         }
+        $_SESSION['current_id_question'] = $id;
         $answers = $this->answerRepository->findByQuestionId($id);
         return $blade->run('displayquestion', ['question' => $question
         , 'answers' => $answers]);
