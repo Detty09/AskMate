@@ -18,7 +18,17 @@ class UserRepository implements RepositoryInterface
 
     public function findAll(): array
     {
-        // TODO: Implement findAll() method.
+        $sql = "SELECT u.id, u.email, u.registration_time,
+                    COUNT(DISTINCT q.id) AS questions,
+                    COUNT(DISTINCT a.id) AS answers
+                FROM registered_user u
+                LEFT JOIN question q ON u.id = q.id_registered_user
+                LEFT JOIN answer a ON u.id = a.id_registered_user
+                GROUP BY u.id, u.email, u.registration_time";
+
+        $stmt = self::$connection->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function find(int $id): object
