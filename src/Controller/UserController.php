@@ -61,7 +61,7 @@ class UserController
             SuperGlobalManager::setSession('user_id', $user->id);
             SuperGlobalManager::setSession('email', $user->email);
 
-            header('Location: /home');
+            header('Location: /');
             exit;
         } else {
             echo $this->blade->run("login", ['error' => 'Invalid email or password']);
@@ -75,7 +75,7 @@ class UserController
         SuperGlobalManager::removeSession('email');
         session_destroy();
 
-        header('Location: /home');
+        header('Location: /');
         exit;
     }
 

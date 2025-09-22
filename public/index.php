@@ -9,6 +9,7 @@ use App\Http\SuperGlobalManager;
 use App\Security\FilterManager;
 use App\View\BladeFactory;
 
+$pdo = Connection::getConnection();
 $QuestionController = new \App\Controller\QuestionController();
 $AnswerController = new \App\Controller\AnswerController();
 
@@ -31,7 +32,7 @@ if (!$filter->checkAll($_SERVER["REQUEST_METHOD"], $_SERVER["REMOTE_ADDR"], $_SE
 
 $router = new Router();
 
-$router->get("/home", function() use ($blade) {
+$router->get("/", function() use ($blade) {
     $name = $_SESSION['email'] ?? "Guest";
     echo $blade->run("home", ["name" => $name]);
 });
