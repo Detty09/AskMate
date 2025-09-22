@@ -9,10 +9,8 @@ use App\Http\SuperGlobalManager;
 use App\Security\FilterManager;
 use App\View\BladeFactory;
 
-$pdo = \App\Database\Connection::getConnection();
-$repository = new \App\Repository\QuestionRepository($pdo);
-$answerRepository = new \App\Repository\AnswerRepository($pdo);
-$QuestionController = new \App\Controller\QuestionController($repository, $answerRepository);
+$QuestionController = new \App\Controller\QuestionController();
+$AnswerController = new \App\Controller\AnswerController();
 
 session_start();
 
@@ -39,10 +37,29 @@ $router->get("/home", function() use ($blade) {
 });
 
 $router->get("/display", function() use ($blade) {
-    global $QuestionController, $answerRepository;
-    $id = isset($_GET['id']) ? (int)$_GET['id'] : null;
-    echo $QuestionController->show($blade, $id, $answerRepository);
+    global $QuestionController;
+    if (!isset($_GET['id']) || !is_numeric($_GET['id']) || (int)$_GET['id'] <= 0) {
+        http_response_code(404);
+        echo $blade->run('displayquestion', ['question' => null, 'answers' => []]);
+        return;
+    }
+
+    $id = (int)$_GET['id'];
+    echo $QuestionController->show($blade, $id);
 });
+
+$router->get("/add-answer", function() use ($blade, $QuestionController) {
+    $id = $_SESSION['current_id_question'] ?? 0;
+
+    if ($id <= 0 || !$QuestionController->show($blade, (int)$id)) {
+        http_response_code(404);
+        echo $blade->run('displayquestion', ['question' => null, 'answers' => []]);
+        return;
+    }
+
+    echo $blade->run('answer_form', ['id_question' => $id]);
+});
+$router->post("/submit-answer", [$AnswerController, "submitAnswer"]);
 
 $formController = new FormController();
 $router->get("/add-question", [$formController, "showForm"]);
