@@ -7,7 +7,13 @@
 <nav>
     <a href="/home">Home</a> |
     <a href="/add-question">Add Question</a>
-    <a href="/register">Register</a>
+
+    @if(isset($_SESSION['user_id']))
+        <a href="/logout" methods="POST">Logout</a>
+    @else
+        <a href="/login">Login</a>
+        <a href="/register">Register</a>
+    @endif
 </nav>
 
 <main>
