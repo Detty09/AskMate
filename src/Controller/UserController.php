@@ -23,4 +23,8 @@ class UserController
     public function store(): void {
 
     }
+    
+    public function login(): string {
+        
+    }
 }
