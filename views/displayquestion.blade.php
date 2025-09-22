@@ -21,4 +21,5 @@
     @else
         <h1>Question not found</h1>
     @endif
+    <a href="/add-answer">Add answer</a>
 @endsection
