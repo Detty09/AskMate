@@ -18,7 +18,11 @@
         @else
             <p>No answers yet.</p>
             @endif
+        @if(isset($_SESSION['user_id']))
         <a href="/add-answer">Add answer</a>
+        @else
+            <p><em>You must be logged in to add an answer.</em></p>
+        @endif
     @else
         <h1>Question not found</h1>
     @endif

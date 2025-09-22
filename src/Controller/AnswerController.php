@@ -21,7 +21,7 @@ class AnswerController
 
     public function submitAnswer(): void {
         $message = SuperGlobalManager::getRequest("answer-message");
-        $userId = 1; //Should be replaced from session
+        $userId = SuperGlobalManager::getSession("user_id");
         $questionId = (int) SuperGlobalManager::getRequest("id_question");
 
         if($questionId <=0 || empty($message)) {
