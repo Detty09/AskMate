@@ -2,31 +2,17 @@
 
 namespace App\Model;
 
-use PDO;
-
 class Question {
-    private PDO $pdo;
 
     public int $id_registered_user;
     public string $title;
     public string $message;
-    public int $vote_number = 0;
+    public int $vote_number;
 
-
-    public function __construct(PDO $pdo) {
-        $this->pdo = $pdo;
-    }
-
-    public function save(): void {
-        $stmt = $this->pdo->prepare("
-            INSERT INTO question (id_registered_user, title, message, vote_number) 
-            VALUES (:id_registered_user, :title, :message, :vote_number)");
-
-        $stmt->execute([
-            "id_registered_user" => $this->id_registered_user,
-            "title" => $this->title,
-            "message" => $this->message,
-            "vote_number" => $this->vote_number
-        ]);
+    public function __construct(int $id_registered_user, string $title, string $message, int $vote_number = 0) {
+        $this->id_registered_user = $id_registered_user;
+        $this->title = $title;
+        $this->message = $message;
+        $this->vote_number = $vote_number;
     }
 }
