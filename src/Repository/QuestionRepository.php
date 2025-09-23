@@ -60,12 +60,22 @@ class QuestionRepository implements RepositoryInterface {
 
     public function update(object $entity): void
     {
-        // TODO: Implement update() method.
+        $stmt = $this->pdo->prepare("
+            UPDATE question
+            SET title = :title, message = :message
+            WHERE id = :id
+        ");
+        $stmt->execute([
+            "id" => $entity->id,
+            "title" => $entity->title,
+            "message" => $entity->message,
+        ]);
     }
 
     public function delete(int $id): void
     {
-        // TODO: Implement delete() method.
+        $stmt = $this->pdo->prepare("DELETE FROM question WHERE id = :id");
+        $stmt->execute([':id' => $id]);
     }
 
     public function search(string $searchTerm): array

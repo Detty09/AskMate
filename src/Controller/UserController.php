@@ -86,19 +86,23 @@ class UserController
 
     public function index(): void
     {
-        $data = $this->userRepository->findAll();
-        $users = [];
+        if (SuperGlobalManager::hasSession('user_id')) {
+            $data = $this->userRepository->findAll();
+            $users = [];
 
-        foreach ($data as $user) {
-            $users[] = [
-                'id' => $user['id'],
-                'email' => $user['email'],
-                'registration_date' => $user['registration_time'],
-                'questions' => $user['questions'] ?? 0,
-                'answers' => $user['answers'] ?? 0,
-            ];
+            foreach ($data as $user) {
+                $users[] = [
+                    'id' => $user['id'],
+                    'email' => $user['email'],
+                    'registration_date' => $user['registration_time'],
+                    'questions' => $user['questions'] ?? 0,
+                    'answers' => $user['answers'] ?? 0,
+                ];
+            }
+
+            echo $this->blade->run("users", ['users' => $users]);
+        } else {
+            echo $this->blade->run('login', ['error' => 'You need to be logged in to access this page']);
         }
-
-        echo $this->blade->run("users", ['users' => $users]);
     }
 }

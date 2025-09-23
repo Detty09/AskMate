@@ -4,6 +4,7 @@ namespace App\Model;
 
 class Question {
 
+    public ?int $id = null;
     public int $id_registered_user;
     public string $title;
     public string $message;

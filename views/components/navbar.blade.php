@@ -27,14 +27,19 @@
                 <li>
                     <a href="/" class="text-white hover:underline" aria-current="page">Home</a>
                 </li>
+                @if(\App\Http\SuperGlobalManager::hasSession('user_id'))
+                    <li>
+                        <a href="/add-question" class="text-white hover:underline">Add Question</a>
+                    </li>
+                    <li>
+                        <a href="/my-questions" class="text-white hover:underline">My Questions</a>
+                    </li>
+                    <li>
+                        <a href="/users" class="text-white hover:underline">List Users</a>
+                    </li>
+                @endif
                 <li>
-                    <a href="/add-question" class="text-white hover:underline">Add Question</a>
-                </li>
-                <li>
-                    <a href="/my-questions" class="text-white hover:underline">My Questions</a>
-                </li>
-                <li>
-                    <a href="/users" class="text-white hover:underline">List Users</a>
+                    <a href="/tags" class="text-white hover:underline">List Tags</a>
                 </li>
             </ul>
             <div class="flex ml-auto">

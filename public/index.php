@@ -4,18 +4,19 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 use App\Controller\AnswerController;
 use App\Controller\FormController;
+use App\Controller\TagController;
 use App\Controller\UserController;
 use App\Controller\QuestionController;
 use App\Database\Connection;
 use App\Http\Router;
 use App\Http\SuperGlobalManager;
 use App\Model\User;
+use App\Repository\TagRepository;
 use App\Repository\UserRepository;
 use App\Repository\QuestionRepository;
 use App\Repository\AnswerRepository;
 use App\Security\FilterManager;
 use App\View\BladeFactory;
-
 
 
 session_start();
@@ -26,10 +27,12 @@ $answerRepository = new AnswerRepository($pdo);
 $QuestionController = new QuestionController($blade, $questionRepository, $answerRepository);
 $AnswerController = new AnswerController($blade, $answerRepository);
 
-$formController = new FormController($blade, $questionRepository);
 
 $userRepository = new UserRepository($pdo);
 $userController = new UserController($blade ,$userRepository);
+
+$tagRepository = new TagRepository($pdo);
+$tagController = new TagController($blade, $tagRepository);
 
 $filter = new FilterManager([
     "methods" => ["GET", "POST"],
@@ -96,8 +99,18 @@ $router->post("/submit", function() use ($blade, $QuestionController, $AnswerCon
 });
 
 //Add question
-$router->get("/add-question", [$formController, "showForm"]);
-$router->post("/submit-question", [$formController, "submitQuestion"]);
+$router->get("/add-question", [$QuestionController, "showNewQuestionForm"]);
+$router->post("/submit-question", [$QuestionController, "submitQuestion"]);
+
+//My questions
+$router->get("/my-questions", [$QuestionController, "listUserQuestions"]);
+
+//Delete question
+$router->post("/delete-question", [$QuestionController, "deleteQuestion"]);
+
+//Update question
+$router->get("/edit-question", [$QuestionController, "showUpdateQuestionForm"]);
+$router->post("/update-question", [$QuestionController, "updateQuestion"]);
 
 //Register
 $router->get("/register", [$userController, 'create']);
@@ -110,5 +123,8 @@ $router->get("/logout", [$userController, 'logout']);
 
 //User List
 $router->get('/users', [$userController, 'index']);
+
+//Tag List
+$router->get('/tags', [$tagController, 'index']);
 
 $router->dispatch($_SERVER["REQUEST_METHOD"], $_SERVER["REQUEST_URI"]);
