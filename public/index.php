@@ -129,4 +129,9 @@ $router->get('/users', [$userController, 'index']);
 $router->get('/tags', [$tagController, 'index']);
 $router->post('/tags', [$tagController, 'store']);
 
+//Vote
+$router->get('/question/vote', function() use ($questionController) {
+    $questionController->vote();
+});
+
 $router->dispatch($_SERVER["REQUEST_METHOD"], $_SERVER["REQUEST_URI"]);
