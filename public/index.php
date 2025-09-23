@@ -81,7 +81,7 @@ $router->get("/answer-edit", function() use ($blade, $AnswerController) {
         echo $blade->run('displayquestion', ['question' => null, 'answers' => []]);
         return;
     }
-    echo $AnswerController->editAnswer($blade, $answerId);
+    echo $AnswerController->editAnswer($answerId);
 });
 
 $router->post("/answer-update", [$AnswerController, "updateAnswer"]);

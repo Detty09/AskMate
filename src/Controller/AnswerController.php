@@ -39,14 +39,14 @@ class AnswerController
         exit;
     }
 
-    public function editAnswer($blade, int $id): string
+    public function editAnswer(int $id): string
     {
         $answer = $this->repository->find($id);
         if (!$answer) {
             http_response_code(404);
-            return $blade->run('answer-edit', ['answer' => null]);
+            return $this->blade->run('answer-edit', ['answer' => null]);
         }
-        return $blade->run('answer-edit', ['answer' => $answer]);
+        return $this->blade->run('answer-edit', ['answer' => $answer]);
     }
 
     public function updateAnswer(): void {
