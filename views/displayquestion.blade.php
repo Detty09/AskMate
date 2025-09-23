@@ -6,9 +6,10 @@
 @section('content')
     @if($question)
         <x-header>Question</x-header>
+        <div>
     <h3>Title: {{ $question->title }}</h3>
     <p>Details: {{ $question->message }}</p>
-        <h3>Answers:</h3>
+        <h3>Answers: </h3>
         @if (count($answers) > 0)
         <ul>
             @foreach($answers as $answer)
@@ -40,5 +41,5 @@
     @else
         <h1>Question not found</h1>
     @endif
-
+        </div>
 @endsection
