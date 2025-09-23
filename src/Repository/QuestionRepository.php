@@ -77,4 +77,9 @@ class QuestionRepository implements RepositoryInterface {
         $stmt = $this->pdo->prepare("DELETE FROM question WHERE id = :id");
         $stmt->execute([':id' => $id]);
     }
+
+    public function increaseVote(int $id, int $increment): void {
+        $stmt = $this->pdo->prepare("UPDATE question SET vote_number = vote_number + :increment WHERE id = :id");
+        $stmt->execute(['increment' => $increment, 'id' => $id]);
+    }
 }
