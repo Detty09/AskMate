@@ -3,13 +3,17 @@
 @section("title", "User's questions")
 
 @section("content")
-    <h1>My Questions</h1>
+    <div class="flex flex-col mx-auto mt-6 w-full">
+        <x-header>My Questions</x-header>
+        @if (empty($questions))
+            <p>You have not asked any questions yet.</p>
+        @else
+            <div class="flex flex-col mt-6 w-full">
+                @foreach ($questions as $question)
+                    @include("question-item", ["question" => $question])
+                @endforeach
+            </div>
+        @endif
+    </div>
 
-    @if (empty($questions))
-        <p>You have not asked any questions yet.</p>
-    @else
-        @foreach ($questions as $question)
-            @include("question-item", ["question" => $question])
-        @endforeach
-    @endif
 @endsection

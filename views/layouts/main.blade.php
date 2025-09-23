@@ -11,11 +11,11 @@
         }
     </style>
 </head>
-<body class="min-h-screen bg-gray-500">
+<body class="min-h-screen flex flex-col bg-white">
 <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 <x-navbar></x-navbar>
 
-<main class="flex justify-center">
+<main class="flex-1 flex justify-center items-start">
     @yield('content')
 </main>
 
