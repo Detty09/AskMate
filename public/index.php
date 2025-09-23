@@ -4,12 +4,14 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 use App\Controller\AnswerController;
 use App\Controller\FormController;
+use App\Controller\TagController;
 use App\Controller\UserController;
 use App\Controller\QuestionController;
 use App\Database\Connection;
 use App\Http\Router;
 use App\Http\SuperGlobalManager;
 use App\Model\User;
+use App\Repository\TagRepository;
 use App\Repository\UserRepository;
 use App\Repository\QuestionRepository;
 use App\Repository\AnswerRepository;
@@ -30,6 +32,9 @@ $formController = new FormController($blade, $questionRepository);
 
 $userRepository = new UserRepository($pdo);
 $userController = new UserController($blade ,$userRepository);
+
+$tagRepository = new TagRepository($pdo);
+$tagController = new TagController($blade, $tagRepository);
 
 $filter = new FilterManager([
     "methods" => ["GET", "POST"],
@@ -102,5 +107,8 @@ $router->get("/logout", [$userController, 'logout']);
 
 //User List
 $router->get('/users', [$userController, 'index']);
+
+//Tag List
+$router->get('/tags', [$tagController, 'index']);
 
 $router->dispatch($_SERVER["REQUEST_METHOD"], $_SERVER["REQUEST_URI"]);
