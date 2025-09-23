@@ -19,7 +19,6 @@ use App\Security\FilterManager;
 use App\View\BladeFactory;
 
 
-
 session_start();
 $pdo = Connection::getConnection();
 $blade = BladeFactory::getBlade();
@@ -28,7 +27,6 @@ $answerRepository = new AnswerRepository($pdo);
 $QuestionController = new QuestionController($blade, $questionRepository, $answerRepository);
 $AnswerController = new AnswerController($blade, $answerRepository);
 
-$formController = new FormController($blade, $questionRepository);
 
 $userRepository = new UserRepository($pdo);
 $userController = new UserController($blade ,$userRepository);
@@ -93,8 +91,18 @@ $router->post("/answer-update", [$AnswerController, "updateAnswer"]);
 $router->post("/answer-delete", [$AnswerController, "deleteAnswer"]);
 
 //Add question
-$router->get("/add-question", [$formController, "showForm"]);
-$router->post("/submit-question", [$formController, "submitQuestion"]);
+$router->get("/add-question", [$QuestionController, "showNewQuestionForm"]);
+$router->post("/submit-question", [$QuestionController, "submitQuestion"]);
+
+//My questions
+$router->get("/my-questions", [$QuestionController, "listUserQuestions"]);
+
+//Delete question
+$router->post("/delete-question", [$QuestionController, "deleteQuestion"]);
+
+//Update question
+$router->get("/edit-question", [$QuestionController, "showUpdateQuestionForm"]);
+$router->post("/update-question", [$QuestionController, "updateQuestion"]);
 
 //Register
 $router->get("/register", [$userController, 'create']);
