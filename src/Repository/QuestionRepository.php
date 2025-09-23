@@ -63,6 +63,7 @@ class QuestionRepository implements RepositoryInterface {
 
     public function delete(int $id): void
     {
-        // TODO: Implement delete() method.
+        $stmt = $this->pdo->prepare("DELETE FROM question WHERE id = :id");
+        $stmt->execute([':id' => $id]);
     }
 }

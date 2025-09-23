@@ -81,6 +81,9 @@ $router->post("/submit-question", [$formController, "submitQuestion"]);
 //My questions
 $router->get("/my-questions", [$QuestionController, "listUserQuestions"]);
 
+//Delete question
+$router->post("/delete-question", [$QuestionController, "deleteQuestion"]);
+
 //Register
 $router->get("/register", [$userController, 'create']);
 $router->post("/register", [$userController, 'store']);

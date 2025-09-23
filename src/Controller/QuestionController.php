@@ -8,11 +8,11 @@ use App\Repository\AnswerRepository;
 use App\Http\SuperGlobalManager;
 use App\View\BladeFactory;
 use eftec\bladeone\BladeOne;
+use JetBrains\PhpStorm\NoReturn;
 
 class QuestionController
 {
     private BladeOne $blade;
-
     private QuestionRepository $repository;
     private AnswerRepository $answerRepository;
 
@@ -46,6 +46,26 @@ class QuestionController
         $questions = $this->repository->findByUser($userId);
 
         echo $this->blade->run("questionlist_user", ['questions' => $questions]);
+    }
+
+    public function deleteQuestion(): void {
+        $questionId = SuperGlobalManager::getRequest("question_id");
+        if (!$questionId) {
+            http_response_code(400);
+            echo "Bad request missing question ID";
+            exit;
+        }
+
+        $userId = SuperGlobalManager::getSession("user_id");
+        $question = $this->repository->find($questionId);
+        if (!$question || $question->id_registered_user != $userId) {
+            http_response_code(403);
+            echo "Forbidden: You cannot delete this question.";
+            exit;
+        }
+        $this->repository->delete($questionId);
+        header("Location: /my-questions");
+        exit;
     }
 
 }
