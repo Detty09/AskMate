@@ -28,9 +28,14 @@ class AnswerRepository implements RepositoryInterface
         // TODO: Implement findAll() method.
     }
 
-    public function find(int $id): object
+    public function find(int $id): ?object
     {
-        // TODO: Implement find() method.
+        $sql = 'SELECT * FROM answer  WHERE id = :id';
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([':id' => $id]);
+
+        $result = $stmt->fetch(PDO::FETCH_OBJ);
+        return $result ?: null;
     }
 
     public function save(object $entity): void
@@ -53,11 +58,16 @@ class AnswerRepository implements RepositoryInterface
 
     public function update(object $entity): void
     {
-        // TODO: Implement update() method.
+
+        $sql = 'UPDATE answer SET message = :message, vote_number = :vote_number WHERE id = :id';
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute(['message' => $entity->message, 'vote_number' => $entity->vote_number,'id' => $entity->id]);
     }
 
     public function delete(int $id): void
     {
-        // TODO: Implement delete() method.
+        $sql = 'DELETE FROM answer WHERE id = :id';
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([':id' => $id]);
     }
 }
