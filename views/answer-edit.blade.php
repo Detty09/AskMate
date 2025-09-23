@@ -8,7 +8,7 @@
     <form action="/answer-update" method="POST">
         <input type="hidden" name="id" value="{{ $answer->id }}">
         <textarea name="answer-message"  id="message" required>{{$answer->message}}</textarea>
-        <button type="submit">Submit</button>
+        <x-submit-button type="submit">Submit</x-submit-button>
     </form>
     @else
         <p>Answer not found</p>

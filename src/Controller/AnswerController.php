@@ -11,11 +11,13 @@ use App\Repository\AnswerRepository;
 class AnswerController
 {
     private AnswerRepository $repository;
+    private $blade;
 
-    public function __construct()
+    public function __construct($blade, AnswerRepository $repository)
     {
         $pdo = Connection::getConnection();
-        $this->repository = new AnswerRepository($pdo);
+        $this->repository = $repository;
+        $this->blade = $blade;
 
     }
 
