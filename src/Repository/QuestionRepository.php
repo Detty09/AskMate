@@ -15,7 +15,9 @@ class QuestionRepository implements RepositoryInterface {
 
     public function findAll(): array
     {
-        // TODO: Implement findAll() method.
+        $sql = 'SELECT * FROM question ORDER BY submission_time DESC';
+        $stmt = $this->pdo->query($sql);
+        return $stmt->fetchAll(PDO::FETCH_OBJ);
     }
 
     public function find(int $id): ?object
