@@ -5,10 +5,11 @@
 
 @section('content')
     @if($question)
-        <x-header>Question</x-header>
+        <div class="mx-auto max-w-3xl p-4 space-y-3">
+        <x-header>Question ID: {{$question->id}}</x-header>
     <h3>Title: {{ $question->title }}</h3>
     <p>Details: {{ $question->message }}</p>
-        <h3>Answers:</h3>
+        <h3>Answers: </h3>
         @if (count($answers) > 0)
         <ul>
             @foreach($answers as $answer)
@@ -33,12 +34,12 @@
             <p>No answers yet.</p>
             @endif
         @if(isset($_SESSION['user_id']))
-        <a href="/add-answer">Add answer</a>
+        <a href="/add-answer" class="inline-block text-white hover:underline focus:ring-1 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2">Add answer</a>
         @else
             <p><em>You must be logged in to add an answer.</em></p>
         @endif
     @else
         <h1>Question not found</h1>
     @endif
-
+        </div>
 @endsection

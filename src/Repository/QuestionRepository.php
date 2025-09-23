@@ -79,4 +79,12 @@ class QuestionRepository implements RepositoryInterface {
         $stmt = $this->pdo->prepare("DELETE FROM question WHERE id = :id");
         $stmt->execute([':id' => $id]);
     }
+
+    public function search(string $searchTerm): array
+    {
+        $sql = "SELECT * FROM question WHERE title LIKE :searchTerm OR message LIKE :searchTerm";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute(['searchTerm' => "%$searchTerm%"]);
+        return $stmt->fetchAll(PDO::FETCH_OBJ);
+    }
 }
