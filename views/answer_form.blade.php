@@ -7,6 +7,6 @@
     <form action="/submit-answer" method="POST">
         <input type="hidden" name="id_question" value="{{ $id_question }}">
         <textarea name="answer-message" required></textarea>
-        <button type="submit">Submit</button>
+        <x-submit-button type="submit">Submit</x-submit-button>
     </form>
 @endsection

@@ -11,11 +11,13 @@ use App\Repository\AnswerRepository;
 class AnswerController
 {
     private AnswerRepository $repository;
+    private $blade;
 
-    public function __construct()
+    public function __construct($blade, AnswerRepository $repository)
     {
         $pdo = Connection::getConnection();
-        $this->repository = new AnswerRepository($pdo);
+        $this->repository = $repository;
+        $this->blade = $blade;
 
     }
 
@@ -34,6 +36,34 @@ class AnswerController
         $this->repository->save($answer);
 
         header("Location: /display?id=$questionId");
+        exit;
+    }
+
+    public function editAnswer(int $id): string
+    {
+        $answer = $this->repository->find($id);
+        if (!$answer) {
+            http_response_code(404);
+            return $this->blade->run('answer-edit', ['answer' => null]);
+        }
+        return $this->blade->run('answer-edit', ['answer' => $answer]);
+    }
+
+    public function updateAnswer(): void {
+        $id = SuperGlobalManager::getRequest("id");
+        $message = SuperGlobalManager::getRequest("answer-message");
+        $answer = $this->repository->find($id);
+        $answer->message = $message;
+        $this->repository->update($answer);
+    header("Location: /display?id={$answer->id_question}");
+    exit;
+    }
+
+    public function deleteAnswer(): void {
+        $id = SuperGlobalManager::getRequest("id");
+        $answer = $this->repository->find($id);
+        $this->repository->delete($answer->id);
+        header("Location: /display?id={$answer->id_question}");
         exit;
     }
 
