@@ -23,6 +23,11 @@ class QuestionController
         $this->answerRepository = $answerRepository;
     }
 
+    public function index() {
+        $questions = $this->questionRepository->findAll();
+        return $this->blade->run('displayquestions', ['questions' => $questions]);
+    }
+
     public function show($blade, int $id): string
     {
        $question = $this->questionRepository->find($id);
