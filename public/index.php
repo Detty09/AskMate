@@ -11,6 +11,7 @@ use App\Database\Connection;
 use App\Http\Router;
 use App\Http\SuperGlobalManager;
 use App\Model\User;
+use App\Repository\QuestionTagRelationRepository;
 use App\Repository\TagRepository;
 use App\Repository\UserRepository;
 use App\Repository\QuestionRepository;
@@ -31,8 +32,9 @@ $AnswerController = new AnswerController($blade, $answerRepository);
 $userRepository = new UserRepository($pdo);
 $userController = new UserController($blade ,$userRepository);
 
+$questionTagRelationRepository = new QuestionTagRelationRepository($pdo);
 $tagRepository = new TagRepository($pdo);
-$tagController = new TagController($blade, $tagRepository);
+$tagController = new TagController($blade, $tagRepository, $questionRepository, $questionTagRelationRepository);
 
 $filter = new FilterManager([
     "methods" => ["GET", "POST"],
@@ -118,5 +120,6 @@ $router->get('/users', [$userController, 'index']);
 
 //Tag List
 $router->get('/tags', [$tagController, 'index']);
+$router->post('/tags', [$tagController, 'store']);
 
 $router->dispatch($_SERVER["REQUEST_METHOD"], $_SERVER["REQUEST_URI"]);

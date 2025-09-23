@@ -38,7 +38,7 @@ class AnswerRepository implements RepositoryInterface
         return $result ?: null;
     }
 
-    public function save(object $entity): void
+    public function save(object $entity): int
     {
         if (!$entity instanceof Answer) {
             throw new \InvalidArgumentException("Expected an Answer instance");
@@ -54,6 +54,8 @@ class AnswerRepository implements RepositoryInterface
             "message" => $entity->message,
             "vote_number" => $entity->vote_number
         ]);
+
+        return $this->pdo->lastInsertId();
     }
 
     public function update(object $entity): void
