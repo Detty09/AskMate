@@ -7,4 +7,7 @@
         <input type="hidden" name="question_id" value="{{$question->id}}">
         <button type="submit">Delete</button>
     </form>
+    <a href="/edit-question?id={{ $question->id }}">
+        <button>Edit</button>
+    </a>
 </div>

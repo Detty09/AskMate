@@ -2,7 +2,6 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-use App\Controller\FormController;
 use App\Controller\UserController;
 use App\Controller\QuestionController;
 use App\Database\Connection;
@@ -16,15 +15,12 @@ use App\Security\FilterManager;
 use App\View\BladeFactory;
 
 
-
 session_start();
 $pdo = Connection::getConnection();
 $blade = BladeFactory::getBlade();
 $questionRepository = new QuestionRepository($pdo);
 $answerRepository = new AnswerRepository($pdo);
 $QuestionController = new QuestionController($blade, $questionRepository, $answerRepository);
-
-$formController = new FormController($blade, $questionRepository);
 
 $AnswerController = new \App\Controller\AnswerController();
 
@@ -75,14 +71,18 @@ $router->get("/add-answer", function() use ($blade, $QuestionController) {
 $router->post("/submit-answer", [$AnswerController, "submitAnswer"]);
 
 //Add question
-$router->get("/add-question", [$formController, "showForm"]);
-$router->post("/submit-question", [$formController, "submitQuestion"]);
+$router->get("/add-question", [$QuestionController, "showNewQuestionForm"]);
+$router->post("/submit-question", [$QuestionController, "submitQuestion"]);
 
 //My questions
 $router->get("/my-questions", [$QuestionController, "listUserQuestions"]);
 
 //Delete question
 $router->post("/delete-question", [$QuestionController, "deleteQuestion"]);
+
+//Update question
+$router->get("/edit-question", [$QuestionController, "showUpdateQuestionForm"]);
+$router->post("/update-question", [$QuestionController, "updateQuestion"]);
 
 //Register
 $router->get("/register", [$userController, 'create']);
