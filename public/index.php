@@ -98,6 +98,14 @@ $router->get("/answer-edit", function() use ($blade, $AnswerController) {
 $router->post("/answer-update", [$AnswerController, "updateAnswer"]);
 $router->post("/answer-delete", [$AnswerController, "deleteAnswer"]);
 
+$router->post("/submit", function() use ($blade, $QuestionController, $AnswerController) {
+    $searchTerm = SuperGlobalManager::getRequest("value", "");
+    $name = $_SESSION['email'] ?? "Guest";
+    $questions = $QuestionController->search($searchTerm);
+    $answers = $AnswerController->search($searchTerm);
+  echo $blade->run('search', ['questions' => $questions, 'answers'=>$answers, 'name'=>$name, 'query' => $searchTerm]);
+});
+
 //Add question
 $router->get("/add-question", [$QuestionController, "showNewQuestionForm"]);
 $router->post("/submit-question", [$QuestionController, "submitQuestion"]);
