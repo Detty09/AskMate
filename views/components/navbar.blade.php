@@ -6,16 +6,24 @@
         </a>
         @if(\App\Http\SuperGlobalManager::hasSession('user_id'))
             <div class="flex items-center space-x-6 rtl:space-x-reverse">
-                <a href="/logout" class="text-sm text-blue-500 hover:underline">Logout</a>
+                <a href="/logout" class="text-sm text-blue-500 hover:underline">
+                    <button class="text-white bg-blue-700 hover:bg-blue-500 focus:outline-none font-medium rounded-full text-sm px-5 py-2.5 text-center cursor-pointer transition-transform duration-500 ease-in-out transform hover:scale-105">
+                        Logout
+                    </button>
+                </a>
             </div>
         @else
             <div class="flex justify-end space-x-6">
-                <div class="flex items-center space-x-6 rtl:space-x-reverse">
-                    <a href="/login" class="text-sm  text-blue-500 hover:underline">Login</a>
-                </div>
-                <div class="flex items-center space-x-6 rtl:space-x-reverse">
-                    <a href="/register" class="text-sm  text-blue-500 hover:underline">Register</a>
-                </div>
+                    <a href="/login" class="text-sm  text-blue-500 hover:underline">
+                        <button class="text-white bg-blue-700 hover:bg-blue-500 font-medium rounded-full text-sm px-5 py-2.5 text-center cursor-pointer transition-transform duration-500 ease-in-out transform hover:scale-105">
+                            Login
+                        </button>
+                    </a>
+                    <a href="/register" class="text-sm  text-blue-500 hover:underline">
+                        <button class="text-white bg-blue-700 hover:bg-blue-500 font-medium rounded-full text-sm px-5 py-2.5 text-center cursor-pointer transition-transform duration-500 ease-in-out transform hover:scale-105">
+                            Register
+                        </button>
+                    </a>
             </div>
         @endif
     </div>
