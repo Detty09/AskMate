@@ -7,6 +7,7 @@ use App\Controller\FormController;
 use App\Controller\TagController;
 use App\Controller\UserController;
 use App\Controller\QuestionController;
+use App\Controller\QuestionsController;
 use App\Database\Connection;
 use App\Http\Router;
 use App\Http\SuperGlobalManager;
@@ -26,6 +27,7 @@ $questionRepository = new QuestionRepository($pdo);
 $answerRepository = new AnswerRepository($pdo);
 $QuestionController = new QuestionController($blade, $questionRepository, $answerRepository);
 $AnswerController = new AnswerController($blade, $answerRepository);
+$QuestionsController = new QuestionsController($questionRepository);
 
 
 $userRepository = new UserRepository($pdo);
@@ -47,9 +49,15 @@ if (!$filter->checkAll($_SERVER["REQUEST_METHOD"], $_SERVER["REMOTE_ADDR"], $_SE
 
 $router = new Router();
 
+/*
 $router->get("/", function() use ($blade) {
     $name = $_SESSION['email'] ?? "Guest";
     echo $blade->run("home", ["name" => $name]);
+});
+*/
+
+$router->get("/", function() use ($blade, $QuestionsController) {
+    echo $QuestionsController->show($blade);
 });
 
 $router->get("/display", function() use ($blade, $QuestionController) {
