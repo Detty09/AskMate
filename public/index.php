@@ -24,16 +24,15 @@ use App\View\BladeFactory;
 session_start();
 $pdo = Connection::getConnection();
 $blade = BladeFactory::getBlade();
+$userRepository = new UserRepository($pdo);
 $questionRepository = new QuestionRepository($pdo);
 $answerRepository = new AnswerRepository($pdo);
-$questionController = new QuestionController($blade, $questionRepository, $answerRepository);
-$AnswerController = new AnswerController($blade, $answerRepository);
-
-$userRepository = new UserRepository($pdo);
-$userController = new UserController($blade ,$userRepository);
-
-$questionTagRelationRepository = new QuestionTagRelationRepository($pdo);
 $tagRepository = new TagRepository($pdo);
+$questionTagRelationRepository = new QuestionTagRelationRepository($pdo);
+
+$userController = new UserController($blade ,$userRepository);
+$questionController = new QuestionController($blade, $questionRepository, $answerRepository, $tagRepository);
+$AnswerController = new AnswerController($blade, $answerRepository);
 $tagController = new TagController($blade, $tagRepository, $questionRepository, $questionTagRelationRepository);
 
 $filter = new FilterManager([

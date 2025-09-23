@@ -7,6 +7,7 @@ use App\Model\Question;
 use App\Repository\QuestionRepository;
 use App\Repository\AnswerRepository;
 use App\Http\SuperGlobalManager;
+use App\Repository\TagRepository;
 use App\View\BladeFactory;
 use eftec\bladeone\BladeOne;
 use JetBrains\PhpStorm\NoReturn;
@@ -16,11 +17,13 @@ class QuestionController
     private BladeOne $blade;
     private QuestionRepository $questionRepository;
     private AnswerRepository $answerRepository;
+    private TagRepository $tagRepository;
 
-    public function __construct(BladeOne $blade, QuestionRepository $repository, AnswerRepository $answerRepository) {
+    public function __construct(BladeOne $blade, QuestionRepository $repository, AnswerRepository $answerRepository, TagRepository $tagRepository) {
         $this->blade = $blade;
         $this->questionRepository = $repository;
         $this->answerRepository = $answerRepository;
+        $this->tagRepository = $tagRepository;
     }
 
     public function index() {
@@ -66,7 +69,8 @@ class QuestionController
     }
 
     public function showNewQuestionForm(): void {
-        echo $this->blade->run("question_form");
+        $tags = $this->tagRepository->findAll();
+        echo $this->blade->run("question_form", ['tags' => $tags]);
     }
 
     public function submitQuestion(): void {
@@ -85,8 +89,12 @@ class QuestionController
         $id = SuperGlobalManager::getRequest("id");
 
         $question = $this->questionRepository->find($id);
+        $tags = $this->tagRepository->findAll();
 
-        echo $this->blade->run("question_form", ["question" => $question]);
+        $error = $_SESSION['error'] ?? null;
+        unset($_SESSION['error']);
+
+        echo $this->blade->run("question_form", ["question" => $question, "tags" => $tags, 'error' => $error]);
     }
 
     public function updateQuestion(): void {

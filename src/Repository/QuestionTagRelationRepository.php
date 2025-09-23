@@ -2,6 +2,8 @@
 
 namespace App\Repository;
 
+use PDO;
+
 class QuestionTagRelationRepository implements RepositoryInterface
 {
     private \PDO $connection;
@@ -17,7 +19,21 @@ class QuestionTagRelationRepository implements RepositoryInterface
 
     public function find(int $id): ?object
     {
-        // TODO: Implement find() method.
+    }
+
+    public function findByQuestionIdAndTagId(int $questionId, int $tagId): array
+    {
+        $sql = "SELECT * FROM rel_question_tag
+                WHERE id_question = :id_question AND id_tag = :id_tag";
+        $stmt = $this->connection->prepare($sql);
+        $stmt->execute(["id_question" => $questionId, "id_tag" => $tagId]);
+
+        $relation = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        if (empty($relation)) {
+            return [];
+        }
+        return $relation;
     }
 
     public function save(object $entity): int

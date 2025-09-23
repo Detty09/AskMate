@@ -38,6 +38,7 @@ class UserController
 
             $this->userRepository->save($user);
 
+            http_response_code(201);
             echo $this->blade->run("home", ['name' => 'Guest']);
         }
     }
