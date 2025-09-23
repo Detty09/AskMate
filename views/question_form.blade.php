@@ -3,8 +3,10 @@
 @section("title", isset($question) ? "Edit question" : "Add new question")
 
 @section('content')
+<div class="flex flex-col">
     <h1>{{ isset($question) ? "Edit question" : "Add new question" }}</h1>
     <form action= {{ isset($question) ? "/update-question" : "/submit-question" }} method="POST">
+        @csrf
 
         @if ( isset($question) )
             <input type="hidden" name="question-id" value="{{$question->id}}">
@@ -21,6 +23,12 @@
                 placeholder="Message"
                 value="{{ isset($question) ? htmlspecialchars($question->message) : "" }}"
                 required>
+
         <button type="submit">Submit</button>
     </form>
+
+    <div class="mt-30">
+        <x-add-tag></x-add-tag>
+    </div>
+</div>
 @endsection

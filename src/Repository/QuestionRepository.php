@@ -40,7 +40,7 @@ class QuestionRepository implements RepositoryInterface {
     }
 
 
-    public function save(object $entity): void
+    public function save(object $entity): int
     {
         if (!$entity instanceof Question) {
             throw new \InvalidArgumentException("Expected a Question instance");
@@ -56,6 +56,8 @@ class QuestionRepository implements RepositoryInterface {
             "message" => $entity->message,
             "vote_number" => $entity->vote_number
         ]);
+
+        return $this->pdo->lastInsertId();
     }
 
     public function update(object $entity): void

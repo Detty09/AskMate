@@ -76,8 +76,7 @@ class UserController
     #[NoReturn]
     public function logout(): void
     {
-        SuperGlobalManager::removeSession('user_id');
-        SuperGlobalManager::removeSession('email');
+        $_SESSION = [];
         session_destroy();
 
         header('Location: /');
