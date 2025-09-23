@@ -139,4 +139,19 @@ class QuestionController
         exit;
     }
 
+    public function vote(): void {
+        $id = SuperGlobalManager::getRequest('id');
+        $inc = SuperGlobalManager::getRequest('inc');
+
+        if (!$id || !is_numeric($inc)) {
+            http_response_code(400);
+            echo "Invalid vote request";
+            exit;
+        }
+
+        $this->questionRepository->increaseVote((int)$id, (int)$inc);
+        header("Location: /");
+        exit;
+    }
+
 }
