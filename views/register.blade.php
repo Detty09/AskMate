@@ -4,7 +4,7 @@
 
 @section('content')
     <div class="flex flex-col mx-auto p-6 mt-6 border rounded-lg bg-gray-700 border-gray-500 items-center">
-        <x-header>Register Now!</x-header>
+        <x-header-light>Register Now!</x-header-light>
         <form action="/register" method="POST" class="min-w-full mt-10">
             @csrf
             <div class="relative z-0 w-full mb-5 group">

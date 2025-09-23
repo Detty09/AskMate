@@ -11,7 +11,7 @@
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col bg-gray-900">
+<body class="min-h-screen flex flex-col bg-white">
 <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 <x-navbar></x-navbar>
 
