@@ -78,6 +78,9 @@ $router->post("/submit-answer", [$AnswerController, "submitAnswer"]);
 $router->get("/add-question", [$formController, "showForm"]);
 $router->post("/submit-question", [$formController, "submitQuestion"]);
 
+//My questions
+$router->get("/my-questions", [$QuestionController, "listUserQuestions"]);
+
 //Register
 $router->get("/register", [$userController, 'create']);
 $router->post("/register", [$userController, 'store']);

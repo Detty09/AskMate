@@ -35,18 +35,17 @@ class QuestionController
         , 'answers' => $answers]);
     }
 
-    /*
+
     public function listUserQuestions(): void {
         $userId = SuperGlobalManager::getSession("user_id");
         if (!$userId) {
-            header("Location: /home");
+            header("Location: /");
             exit;
         }
 
         $questions = $this->repository->findByUser($userId);
 
-        echo $this->blade->run();
+        echo $this->blade->run("questionlist_user", ['questions' => $questions]);
     }
 
-    */
 }
