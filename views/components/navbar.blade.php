@@ -36,6 +36,9 @@
                 <li>
                     <a href="/users" class="text-white hover:underline">List Users</a>
                 </li>
+                <li>
+                    <a href="/tags" class="text-white hover:underline">List Tags</a>
+                </li>
             </ul>
         </div>
     </div>

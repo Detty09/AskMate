@@ -9,11 +9,11 @@ use PDO;
 class UserRepository implements RepositoryInterface
 {
 
-    private static PDO $connection;
+    private PDO $connection;
 
     public function __construct(PDO $connection)
     {
-        self::$connection = $connection;
+        $this->connection = $connection;
     }
 
     public function findAll(): array
@@ -26,7 +26,7 @@ class UserRepository implements RepositoryInterface
                 LEFT JOIN answer a ON u.id = a.id_registered_user
                 GROUP BY u.id, u.email, u.registration_time";
 
-        $stmt = self::$connection->prepare($sql);
+        $stmt = $this->connection->prepare($sql);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -39,7 +39,7 @@ class UserRepository implements RepositoryInterface
     public function findByEmail(string $email): object
     {
         $sql = "SELECT * FROM registered_user WHERE email = :email";
-        $stmt = self::$connection->prepare($sql);
+        $stmt = $this->connection->prepare($sql);
         $stmt->execute(['email' => $email]);
         return $stmt->fetch(PDO::FETCH_OBJ);
     }
@@ -47,7 +47,7 @@ class UserRepository implements RepositoryInterface
     public function save(object $entity): void
     {
         $sql = "INSERT INTO registered_user (email, password_hash) VALUES (?,?)";
-        $stmt = self::$connection->prepare($sql);
+        $stmt = $this->connection->prepare($sql);
         $stmt->execute([$entity->getEmail(), $entity->getPassword()]);
     }
 
