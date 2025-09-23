@@ -1,14 +1,19 @@
-<form action="/tags" method="POST">
+@if(isset($error))
+    <x-error>{{ $error }}</x-error>
+@endif
+
+<form action="/tags" method="POST" class="mt-6">
     @csrf
     <input type="hidden" name="question-id" value="{{$question->id}}">
     <div class="flex items-center space-x-6">
-        <select>
+        <select name="tag-id">
             <option value="">Choose tag</option>
             @foreach($tags as $tag)
                 <option value="{{ $tag['id'] }}">{{ $tag['name'] }}</option>
             @endforeach
         </select>
         <x-submit-button>Add tag</x-submit-button>
+
     </div>
 </form>
 

@@ -44,13 +44,35 @@ class TagController
         $questionId = SuperGlobalManager::getRequest("question-id");
         $question = $this->questionRepository->find($questionId);
 
-        $name = SuperGlobalManager::getRequest('tag');
-        $tag = new Tag($name);
-        $tagId = $this->tagRepository->save($tag);
+        $tagId = SuperGlobalManager::getRequest("tag-id");
+
+        if ($tagId === null) {
+            $name = strtolower(SuperGlobalManager::getRequest('tag'));
+            $name = ucfirst($name);
+
+            $existingTag = $this->tagRepository->findByName($name);
+
+            if (!empty($existingTag)) {
+                SuperGlobalManager::setSession('error', 'Tag already exists!');
+                header("Location: /edit-question?id=" . $questionId);
+                exit;
+            }
+
+            $tag = new Tag($name);
+            $tagId = $this->tagRepository->save($tag);
+        }
+
+        $existingRelation = $this->questionTagRelationRepository->findByQuestionIdAndTagId($questionId,$tagId);
+        if (!empty($existingRelation)) {
+            SuperGlobalManager::setSession('error', 'Tag already added to this question!');
+            header("Location: /edit-question?id=" . $questionId);
+            exit;
+        }
 
         $questionTagRelation = new QuestionTagRelation($questionId, $tagId);
         $this->questionTagRelationRepository->save($questionTagRelation);
 
+        header("Location: /edit-question?id=" . $questionId);
         echo $this->blade->run("question_form", ["question" => $question]);
     }
 }
