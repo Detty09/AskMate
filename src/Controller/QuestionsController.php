@@ -13,7 +13,7 @@ class QuestionsController
     public function show($blade): string
     {
         $questions = $this->repository->findAll();
-        return $blade->run('question', ['questions' => $questions]);
+        return $blade->run('displayquestions', ['questions' => $questions]);
     }
 
 }
