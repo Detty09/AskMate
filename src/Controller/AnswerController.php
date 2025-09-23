@@ -67,4 +67,15 @@ class AnswerController
         exit;
     }
 
+    public function search(string $searchTerm): ?array {
+        $searchTerm = trim($searchTerm);
+        if (empty($searchTerm)) {
+            return null;
+        }
+     $answers = $this->repository->search($searchTerm);
+        if(empty($answers)) {
+            return null;
+        }
+        return $answers;
+    }
 }

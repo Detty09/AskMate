@@ -67,4 +67,12 @@ class QuestionRepository implements RepositoryInterface {
     {
         // TODO: Implement delete() method.
     }
+
+    public function search(string $searchTerm): array
+    {
+        $sql = "SELECT * FROM question WHERE title LIKE :searchTerm OR message LIKE :searchTerm";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute(['searchTerm' => "%$searchTerm%"]);
+        return $stmt->fetchAll(PDO::FETCH_OBJ);
+    }
 }

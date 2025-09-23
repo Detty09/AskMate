@@ -35,6 +35,18 @@ class QuestionController
         , 'answers' => $answers]);
     }
 
+    public function search(string $searchTerm): ?array {
+        $searchTerm = trim($searchTerm);
+        if (empty($searchTerm)) {
+            return null;
+        }
+        $questions = $this->repository->search($searchTerm);
+        if(empty($questions)) {
+            return null;
+        }
+        return $questions;
+    }
+
     /*
     public function listUserQuestions(): void {
         $userId = SuperGlobalManager::getSession("user_id");

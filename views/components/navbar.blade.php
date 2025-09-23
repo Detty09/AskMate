@@ -37,6 +37,13 @@
                     <a href="/users" class="text-white hover:underline">List Users</a>
                 </li>
             </ul>
+            <div class="flex ml-auto">
+                    <form action="/submit" method="POST" class="flex ml-auto">
+                        <input type="text" name="value" placeholder="Search..."
+                               class="px-2 py-1 rounded-l text-black focus:outline-none focus:ring-2 focus:ring-blue-400 bg-gray-200 border border-gray-400">
+                        <x-submit-button>Submit</x-submit-button>
+                    </form>
+            </div>
         </div>
     </div>
 </nav>

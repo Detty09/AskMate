@@ -70,4 +70,14 @@ class AnswerRepository implements RepositoryInterface
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([':id' => $id]);
     }
+
+    public function search(string $searchTerm): array
+    {
+        $sql = "SELECT a.id, a.message AS answer_message, q.id AS question_id, q.title, q.message AS question_message  FROM answer a 
+                JOIN question q ON a.id_question = q.id 
+                WHERE a.message LIKE :searchTerm";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute(['searchTerm' => "%$searchTerm%"]);
+        return $stmt->fetchAll(PDO::FETCH_OBJ);
+    }
 }
