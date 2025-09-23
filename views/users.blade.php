@@ -3,46 +3,53 @@
 @section('title', 'User List')
 
 @section('content')
-    <h1>Registered Users</h1>
+    <div class="flex flex-col items-center mx-auto mt-6">
+        <x-header>Registered Users</x-header>
 
-    <table>
-        <tr>
-            <td>
-                ID
-            </td>
-            <td>
-                Email
-            </td>
-            <td>
-                Registration date
-            </td>
-            <td>
-                Questions
-            </td>
-            <td>
-                Answers
-            </td>
-        </tr>
+        <div class="relative overflow-x-auto shadow-md rounded-lg mt-6">
+            <table class="w-full text-2xl text-left rtl:text-right border-4 border-gray-800 text-gray-400">
+                <thead class="text-xs uppercase text-gray-400">
+                <tr>
+                    <th scope="col" class="px-6 py-3 bg-gray-700">
+                        ID
+                    </th>
+                    <th scope="col" class="px-6 py-3 bg-gray-800">
+                        Email
+                    </th>
+                    <th scope="col" class="px-6 py-3 bg-gray-700">
+                        Registration date
+                    </th>
+                    <th scope="col" class="px-6 py-3 bg-gray-800">
+                        Questions
+                    </th>
+                    <th scope="col" class="px-6 py-3 bg-gray-700">
+                        Answers
+                    </th>
+                </tr>
+                </thead>
 
-        @foreach($users as $user)
-            <tr>
-                <td>
-                    {{ $user['id'] }}
-                </td>
-                <td>
-                    {{ $user['email'] }}
-                </td>
-                <td>
-                    {{ $user['registration_date'] }}
-                </td>
-                <td>
-                    {{ $user['questions']}}
-                </td>
-                <td>
-                    {{ $user['answers']}}
-                </td>
-            </tr>
-        @endforeach
-
-    </table>
+                <tbody>
+                @foreach($users as $user)
+                    <tr class="border-b border-gray-800">
+                        <td class="px-6 py-4 bg-gray-700">
+                            {{ $user['id'] }}
+                        </td>
+                        <td class="px-6 py-4 font-medium whitespace-nowrap text-white bg-gray-800">
+                            {{ $user['email'] }}
+                        </td>
+                        <td class="px-6 py-4 bg-gray-700">
+                            {{ $user['registration_date'] }}
+                        </td>
+                        <td class="px-6 py-4 bg-gray-800">
+                            {{ $user['questions']}}
+                        </td>
+                        <td class="px-6 py-4 bg-gray-700">
+                            {{ $user['answers']}}
+                        </td>
+                    </tr>
+                @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
 @endsection

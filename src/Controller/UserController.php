@@ -13,7 +13,8 @@ class UserController
     private BladeOne $blade;
     private UserRepository $userRepository;
 
-    public function __construct(BladeOne $blade, UserRepository $userRepository) {
+    public function __construct(BladeOne $blade, UserRepository $userRepository)
+    {
         $this->blade = $blade;
         $this->userRepository = $userRepository;
     }
@@ -23,28 +24,31 @@ class UserController
         echo $this->blade->run('register');
     }
 
-    public function store(): void {
+    public function store(): void
+    {
         $email = $_POST['email'];
         $confirmEmail = $_POST['email_confirmation'];
 
         if ($email !== $confirmEmail) {
-            echo 'Emails do not match';
-            return;
+            echo $this->blade->run("register", ['error' => 'Emails do not match']);
+            die();
+        } else {
+            $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+            $user = new User($email, $password);
+
+            $this->userRepository->save($user);
+
+            echo $this->blade->run("home", ['name' => 'Guest']);
         }
-
-        $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-        $user = new User($email, $password);
-
-        $this->userRepository->save($user);
-
-        echo $this->blade->run("home");
     }
 
-    public function loginPage(): void {
+    public function loginPage(): void
+    {
         echo $this->blade->run("login");
     }
 
-    public function login(): string {
+    public function login(): string
+    {
         $email = $_POST['email'];
         $password = $_POST['password'];
 
@@ -70,7 +74,8 @@ class UserController
     }
 
     #[NoReturn]
-    public function logout(): void {
+    public function logout(): void
+    {
         SuperGlobalManager::removeSession('user_id');
         SuperGlobalManager::removeSession('email');
         session_destroy();
