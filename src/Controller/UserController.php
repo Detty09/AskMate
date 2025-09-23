@@ -13,7 +13,8 @@ class UserController
     private BladeOne $blade;
     private UserRepository $userRepository;
 
-    public function __construct(BladeOne $blade, UserRepository $userRepository) {
+    public function __construct(BladeOne $blade, UserRepository $userRepository)
+    {
         $this->blade = $blade;
         $this->userRepository = $userRepository;
     }
@@ -23,28 +24,31 @@ class UserController
         echo $this->blade->run('register');
     }
 
-    public function store(): void {
+    public function store(): void
+    {
         $email = $_POST['email'];
         $confirmEmail = $_POST['email_confirmation'];
 
         if ($email !== $confirmEmail) {
-            echo 'Emails do not match';
-            return;
+            echo $this->blade->run("register", ['error' => 'Emails do not match']);
+            die();
+        } else {
+            $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+            $user = new User($email, $password);
+
+            $this->userRepository->save($user);
+
+            echo $this->blade->run("home", ['name' => 'Guest']);
         }
-
-        $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-        $user = new User($email, $password);
-
-        $this->userRepository->save($user);
-
-        echo $this->blade->run("home");
     }
 
-    public function loginPage(): void {
+    public function loginPage(): void
+    {
         echo $this->blade->run("login");
     }
 
-    public function login(): string {
+    public function login(): string
+    {
         $email = $_POST['email'];
         $password = $_POST['password'];
 
@@ -70,7 +74,8 @@ class UserController
     }
 
     #[NoReturn]
-    public function logout(): void {
+    public function logout(): void
+    {
         SuperGlobalManager::removeSession('user_id');
         SuperGlobalManager::removeSession('email');
         session_destroy();
@@ -81,19 +86,23 @@ class UserController
 
     public function index(): void
     {
-        $data = $this->userRepository->findAll();
-        $users = [];
+        if (SuperGlobalManager::hasSession('user_id')) {
+            $data = $this->userRepository->findAll();
+            $users = [];
 
-        foreach ($data as $user) {
-            $users[] = [
-                'id' => $user['id'],
-                'email' => $user['email'],
-                'registration_date' => $user['registration_time'],
-                'questions' => $user['questions'] ?? 0,
-                'answers' => $user['answers'] ?? 0,
-            ];
+            foreach ($data as $user) {
+                $users[] = [
+                    'id' => $user['id'],
+                    'email' => $user['email'],
+                    'registration_date' => $user['registration_time'],
+                    'questions' => $user['questions'] ?? 0,
+                    'answers' => $user['answers'] ?? 0,
+                ];
+            }
+
+            echo $this->blade->run("users", ['users' => $users]);
+        } else {
+            echo $this->blade->run('login', ['error' => 'You need to be logged in to access this page']);
         }
-
-        echo $this->blade->run("users", ['users' => $users]);
     }
 }

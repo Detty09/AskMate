@@ -2,28 +2,25 @@
 <html>
 <head>
     <title>@yield('title', 'My App')</title>
+    <style>
+        input:-webkit-autofill {
+            caret-color: white;
+            box-shadow: inset 0 0 0 1000px transparent;
+            -webkit-text-fill-color: #fff;
+            transition: background-color 5000s ease-in-out 0s;
+        }
+    </style>
 </head>
-<body>
-<nav>
-    <a href="/">Home</a> |
+<body class="min-h-screen bg-gray-500">
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+<x-navbar></x-navbar>
 
-    @if(\App\Http\SuperGlobalManager::hasSession('user_id'))
-        <a href="/add-question">Add Question</a>
-        <a href="/my-questions">My Questions</a>
-        <a href="/users">List Users</a>
-        <a href="/logout">Logout</a>
-    @else
-        <a href="/login">Login</a>
-        <a href="/register">Register</a>
-    @endif
-</nav>
-
-<main>
+<main class="flex justify-center">
     @yield('content')
 </main>
 
-<footer>
-    <p>&copy; {{ date('Y') }} My App</p>
+<footer class="flex justify-end mr-6">
+    <p class="text-white">&copy; {{ date('Y') }} My App</p>
 </footer>
 </body>
 </html>

@@ -2,6 +2,8 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
+use App\Controller\AnswerController;
+use App\Controller\FormController;
 use App\Controller\UserController;
 use App\Controller\QuestionController;
 use App\Database\Connection;
@@ -21,8 +23,8 @@ $blade = BladeFactory::getBlade();
 $questionRepository = new QuestionRepository($pdo);
 $answerRepository = new AnswerRepository($pdo);
 $QuestionController = new QuestionController($blade, $questionRepository, $answerRepository);
+$AnswerController = new AnswerController($blade, $answerRepository);
 
-$AnswerController = new \App\Controller\AnswerController();
 
 $userRepository = new UserRepository($pdo);
 $userController = new UserController($blade ,$userRepository);
@@ -45,8 +47,7 @@ $router->get("/", function() use ($blade) {
     echo $blade->run("home", ["name" => $name]);
 });
 
-$router->get("/display", function() use ($blade) {
-    global $QuestionController;
+$router->get("/display", function() use ($blade, $QuestionController) {
     if (!isset($_GET['id']) || !is_numeric($_GET['id']) || (int)$_GET['id'] <= 0) {
         http_response_code(404);
         echo $blade->run('displayquestion', ['question' => null, 'answers' => []]);
@@ -68,7 +69,21 @@ $router->get("/add-answer", function() use ($blade, $QuestionController) {
 
     echo $blade->run('answer_form', ['id_question' => $id]);
 });
+
 $router->post("/submit-answer", [$AnswerController, "submitAnswer"]);
+
+$router->get("/answer-edit", function() use ($blade, $AnswerController) {
+    $answerId = (int) SuperGlobalManager::getRequest("id");
+    if (!$answerId) {
+        http_response_code(404);
+        echo $blade->run('displayquestion', ['question' => null, 'answers' => []]);
+        return;
+    }
+    echo $AnswerController->editAnswer($answerId);
+});
+
+$router->post("/answer-update", [$AnswerController, "updateAnswer"]);
+$router->post("/answer-delete", [$AnswerController, "deleteAnswer"]);
 
 //Add question
 $router->get("/add-question", [$QuestionController, "showNewQuestionForm"]);
