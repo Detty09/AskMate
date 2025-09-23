@@ -40,7 +40,7 @@ class QuestionRepository implements RepositoryInterface {
     }
 
 
-    public function save(object $entity): void
+    public function save(object $entity): int
     {
         if (!$entity instanceof Question) {
             throw new \InvalidArgumentException("Expected a Question instance");
@@ -56,6 +56,8 @@ class QuestionRepository implements RepositoryInterface {
             "message" => $entity->message,
             "vote_number" => $entity->vote_number
         ]);
+
+        return $this->pdo->lastInsertId();
     }
 
     public function update(object $entity): void
@@ -76,5 +78,18 @@ class QuestionRepository implements RepositoryInterface {
     {
         $stmt = $this->pdo->prepare("DELETE FROM question WHERE id = :id");
         $stmt->execute([':id' => $id]);
+    }
+
+    public function search(string $searchTerm): array
+    {
+        $sql = "SELECT * FROM question WHERE title LIKE :searchTerm OR message LIKE :searchTerm";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute(['searchTerm' => "%$searchTerm%"]);
+        return $stmt->fetchAll(PDO::FETCH_OBJ);
+    }
+
+    public function increaseVote(int $id, int $increment): void {
+        $stmt = $this->pdo->prepare("UPDATE question SET vote_number = vote_number + :increment WHERE id = :id");
+        $stmt->execute(['increment' => $increment, 'id' => $id]);
     }
 }

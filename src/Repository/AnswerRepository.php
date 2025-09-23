@@ -38,7 +38,7 @@ class AnswerRepository implements RepositoryInterface
         return $result ?: null;
     }
 
-    public function save(object $entity): void
+    public function save(object $entity): int
     {
         if (!$entity instanceof Answer) {
             throw new \InvalidArgumentException("Expected an Answer instance");
@@ -54,6 +54,8 @@ class AnswerRepository implements RepositoryInterface
             "message" => $entity->message,
             "vote_number" => $entity->vote_number
         ]);
+
+        return $this->pdo->lastInsertId();
     }
 
     public function update(object $entity): void
@@ -69,5 +71,15 @@ class AnswerRepository implements RepositoryInterface
         $sql = 'DELETE FROM answer WHERE id = :id';
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([':id' => $id]);
+    }
+
+    public function search(string $searchTerm): array
+    {
+        $sql = "SELECT a.id, a.message AS answer_message, q.id AS question_id, q.title, q.message AS question_message  FROM answer a 
+                JOIN question q ON a.id_question = q.id 
+                WHERE a.message LIKE :searchTerm";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute(['searchTerm' => "%$searchTerm%"]);
+        return $stmt->fetchAll(PDO::FETCH_OBJ);
     }
 }

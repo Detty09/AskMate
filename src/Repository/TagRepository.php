@@ -25,14 +25,30 @@ class TagRepository implements RepositoryInterface
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function findByName(string $name): array {
+        $sql = 'SELECT name FROM tag WHERE name = :name';
+        $stmt = $this->connection->prepare($sql);
+        $stmt->execute(["name" => $name]);
+
+        $tag = $stmt->fetch(PDO::FETCH_ASSOC);
+        if (empty($tag)) {
+            return [];
+        }
+        return $tag;
+    }
+
     public function find(int $id): ?object
     {
         // TODO: Implement find() method.
     }
 
-    public function save(object $entity): void
+    public function save(object $entity): int
     {
-        // TODO: Implement save() method.
+        $sql = "INSERT INTO tag (name) VALUES (?)";
+        $stmt = $this->connection->prepare($sql);
+        $stmt->execute([$entity->getName()]);
+
+        return $this->connection->lastInsertId();
     }
 
     public function update(object $entity): void

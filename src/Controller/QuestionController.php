@@ -7,6 +7,7 @@ use App\Model\Question;
 use App\Repository\QuestionRepository;
 use App\Repository\AnswerRepository;
 use App\Http\SuperGlobalManager;
+use App\Repository\TagRepository;
 use App\View\BladeFactory;
 use eftec\bladeone\BladeOne;
 use JetBrains\PhpStorm\NoReturn;
@@ -16,11 +17,18 @@ class QuestionController
     private BladeOne $blade;
     private QuestionRepository $questionRepository;
     private AnswerRepository $answerRepository;
+    private TagRepository $tagRepository;
 
-    public function __construct(BladeOne $blade, QuestionRepository $repository, AnswerRepository $answerRepository) {
+    public function __construct(BladeOne $blade, QuestionRepository $repository, AnswerRepository $answerRepository, TagRepository $tagRepository) {
         $this->blade = $blade;
         $this->questionRepository = $repository;
         $this->answerRepository = $answerRepository;
+        $this->tagRepository = $tagRepository;
+    }
+
+    public function index() {
+        $questions = $this->questionRepository->findAll();
+        return $this->blade->run('displayquestions', ['questions' => $questions]);
     }
 
     public function show($blade, int $id): string
@@ -36,6 +44,17 @@ class QuestionController
         , 'answers' => $answers]);
     }
 
+    public function search(string $searchTerm): ?array {
+        $searchTerm = trim($searchTerm);
+        if (empty($searchTerm)) {
+            return null;
+        }
+        $questions = $this->questionRepository->search($searchTerm);
+        if(empty($questions)) {
+            return null;
+        }
+        return $questions;
+    }
 
     public function listUserQuestions(): void {
         $userId = SuperGlobalManager::getSession("user_id");
@@ -50,7 +69,8 @@ class QuestionController
     }
 
     public function showNewQuestionForm(): void {
-        echo $this->blade->run("question_form");
+        $tags = $this->tagRepository->findAll();
+        echo $this->blade->run("question_form", ['tags' => $tags]);
     }
 
     public function submitQuestion(): void {
@@ -69,8 +89,12 @@ class QuestionController
         $id = SuperGlobalManager::getRequest("id");
 
         $question = $this->questionRepository->find($id);
+        $tags = $this->tagRepository->findAll();
 
-        echo $this->blade->run("question_form", ["question" => $question]);
+        $error = $_SESSION['error'] ?? null;
+        unset($_SESSION['error']);
+
+        echo $this->blade->run("question_form", ["question" => $question, "tags" => $tags, 'error' => $error]);
     }
 
     public function updateQuestion(): void {
@@ -120,6 +144,21 @@ class QuestionController
         }
         $this->questionRepository->delete($questionId);
         header("Location: /my-questions");
+        exit;
+    }
+
+    public function vote(): void {
+        $id = SuperGlobalManager::getRequest('id');
+        $inc = SuperGlobalManager::getRequest('inc');
+
+        if (!$id || !is_numeric($inc)) {
+            http_response_code(400);
+            echo "Invalid vote request";
+            exit;
+        }
+
+        $this->questionRepository->increaseVote((int)$id, (int)$inc);
+        header("Location: /");
         exit;
     }
 

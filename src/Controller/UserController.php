@@ -38,6 +38,7 @@ class UserController
 
             $this->userRepository->save($user);
 
+            http_response_code(201);
             echo $this->blade->run("home", ['name' => 'Guest']);
         }
     }
@@ -76,8 +77,7 @@ class UserController
     #[NoReturn]
     public function logout(): void
     {
-        SuperGlobalManager::removeSession('user_id');
-        SuperGlobalManager::removeSession('email');
+        $_SESSION = [];
         session_destroy();
 
         header('Location: /');

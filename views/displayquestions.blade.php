@@ -1,4 +1,3 @@
-<?php
 @extends('layouts.main')
 
 @section('title', 'All Questions')
@@ -9,9 +8,12 @@
         <ul>
             @foreach ($questions as $question)
                 <li>
-                    <h2>{{ $question->title }}</h2>
+                    <h2>{{ $question->title }} <span style="font-size: 0.8em; color: #888;">(Votes: {{ $question->vote_number }})</span></h2>
+                    <a href="/question/vote?id={{ $question->id }}&inc=1">Vote up</a>
+                    <a href="/question/vote?id={{ $question->id }}&inc=-1">Vote down</a>
                     <p>{{ $question->message }}</p>
                     <small>Submitted: {{ $question->submission_time }}</small>
+
                 </li>
             @endforeach
         </ul>

@@ -5,6 +5,8 @@
 @section('content')
     <div class="flex flex-col mx-auto p-6 mt-6 border rounded-lg bg-gray-700 border-gray-500 items-center">
         <x-header>Welcome Back!</x-header>
+        <form action="/login" method="POST" class="max-w-md mx-auto mt-10">
+            @csrf
         <form action="/login" method="POST" class="min-w-full mt-10">
             <div class="relative z-0 w-full mb-5 group">
                 <input type="email" name="email" id="email"
