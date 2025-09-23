@@ -44,11 +44,13 @@ class UserRepository implements RepositoryInterface
         return $stmt->fetch(PDO::FETCH_OBJ);
     }
 
-    public function save(object $entity): void
+    public function save(object $entity): int
     {
         $sql = "INSERT INTO registered_user (email, password_hash) VALUES (?,?)";
         $stmt = $this->connection->prepare($sql);
         $stmt->execute([$entity->getEmail(), $entity->getPassword()]);
+
+        return $this->connection->lastInsertId();
     }
 
     public function update(object $entity): void

@@ -2,27 +2,17 @@
 
 namespace App\Repository;
 
-use PDO;
-
-class TagRepository implements RepositoryInterface
+class QuestionTagRelationRepository implements RepositoryInterface
 {
-    private PDO $connection;
+    private \PDO $connection;
 
-    public function __construct(PDO $connection){
+    public function __construct(\PDO $connection) {
         $this->connection = $connection;
     }
 
     public function findAll(): array
     {
-        $sql = "SELECT t.id, t.name, COUNT(rel.id_question) AS questions 
-                FROM tag t
-                LEFT JOIN rel_question_tag rel ON rel.id_tag = t.id
-                GROUP BY t.id";
-
-        $stmt = $this->connection->prepare($sql);
-        $stmt->execute();
-
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        // TODO: Implement findAll() method.
     }
 
     public function find(int $id): ?object
@@ -32,9 +22,9 @@ class TagRepository implements RepositoryInterface
 
     public function save(object $entity): int
     {
-        $sql = "INSERT INTO tag (name) VALUES (?)";
+        $sql = "INSERT INTO rel_question_tag (id_question, id_tag) VALUES(?,?)";
         $stmt = $this->connection->prepare($sql);
-        $stmt->execute([$entity->getName()]);
+        $stmt->execute([$entity->getQuestionId(), $entity->getTagId()]);
 
         return $this->connection->lastInsertId();
     }
