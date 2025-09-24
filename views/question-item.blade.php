@@ -4,25 +4,43 @@
 
             <div class="flex flex-col">
                 <a href="/display?id={{ $question->id }}">
-                    <h3 class="text-xl font-semibold text-white transition-transform duration-500 ease-in-out transform hover:scale-105">{{ $question->title }}</h3>
+                    <h3 class="text-xl font-semibold text-white transition-transform duration-100 ease-in-out transform hover:scale-105">{{ $question->title }}</h3>
                 </a>
                 <p class="text-gray-400 text-sm">{{ $question->submission_time }}</p>
             </div>
 
             <div class="flex gap-3">
-                <form action="/delete-question" method="POST">
-                    <input type="hidden" name="question_id" value="{{ $question->id }}">
-                    <button type="submit"
-                            class="px-3 py-1 text-sm text-white bg-red-600 rounded-lg hover:bg-red-400 transition-colors transition-transform duration-500 ease-in-out transform hover:scale-105">
-                        Delete
-                    </button>
-                </form>
+                @if ($mode === "myquestions")
+                    <form action="/delete-question" method="POST">
+                        <input type="hidden" name="question_id" value="{{ $question->id }}">
+                        <button type="submit"
+                                class="px-3 py-1 text-sm text-white bg-red-600 rounded-lg hover:bg-red-400 transition-colors transition-transform duration-100 ease-in-out transform hover:scale-105">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </form>
 
-                <a href="/edit-question?id={{ $question->id }}">
-                    <button class="px-3 py-1 text-sm text-white bg-blue-700 rounded-lg hover:bg-blue-500 transition-colors transition-transform duration-500 ease-in-out transform hover:scale-105">
-                        Edit
-                    </button>
-                </a>
+                    <a href="/edit-question?id={{ $question->id }}">
+                        <button class="px-3 py-1 text-sm text-white bg-yellow-500 rounded-lg hover:bg-yellow-300 transition-colors transition-transform duration-100 ease-in-out transform hover:scale-105">
+                            <i class="fa-solid fa-pen"></i>
+                        </button>
+                    </a>
+                @else
+                    <div class="flex flex-col items-center text-sm text-gray-300">
+                        <div class="flex gap-5">
+                            <a href="/question/vote?id={{ $question->id }}&inc=1"
+                               class="text-green-400 hover:text-green-300 transition-colors text-xl transition-transform duration-100 ease-in-out transform hover:scale-105">
+                                <i class="fas fa-thumbs-up"></i>
+                            </a>
+                            <a href="/question/vote?id={{ $question->id }}&inc=-1"
+                               class="text-red-400 hover:text-red-300 transition-colors text-xl transition-transform duration-100 ease-in-out transform hover:scale-105">
+                                <i class="fas fa-thumbs-down"></i>
+                            </a>
+                        </div>
+                        <div>
+                            <span style="font-size: 0.8em; color: #888;">(Votes: {{ $question->vote_number }})</span>
+                        </div>
+                    </div>
+                @endif
             </div>
         </div>
     </div>
