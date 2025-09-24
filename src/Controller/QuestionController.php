@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Database\Connection;
 use App\Model\Question;
+use App\Repository\ImageRepository;
 use App\Repository\QuestionRepository;
 use App\Repository\AnswerRepository;
 use App\Http\SuperGlobalManager;
@@ -20,14 +21,17 @@ class QuestionController
     private AnswerRepository $answerRepository;
     private TagRepository $tagRepository;
 
+    private ImageRepository $imageRepository;
+
     private QuestionTagRelationRepository $questionTagRelationRepository;
 
-    public function __construct(BladeOne $blade, QuestionRepository $repository, AnswerRepository $answerRepository, TagRepository $tagRepository, QuestionTagRelationRepository $questionTagRelationRepository) {
+    public function __construct(BladeOne $blade, QuestionRepository $repository, AnswerRepository $answerRepository, TagRepository $tagRepository, QuestionTagRelationRepository $questionTagRelationRepository, ImageRepository $imageRepository) {
         $this->blade = $blade;
         $this->questionRepository = $repository;
         $this->answerRepository = $answerRepository;
         $this->tagRepository = $tagRepository;
         $this->questionTagRelationRepository = $questionTagRelationRepository;
+        $this->imageRepository = $imageRepository;
     }
 
     public function index() {
@@ -51,8 +55,15 @@ class QuestionController
         }
         $_SESSION['current_id_question'] = $id;
         $answers = $this->answerRepository->findByQuestionId($id);
-        echo $this->blade->run('displayquestion', ['question' => $question
-        , 'answers' => $answers]);
+        $id_image = $question->id_image;
+        if($id_image) {
+            $image = $this->imageRepository->find($question->id_image);
+            echo $this->blade->run('displayquestion', ['question' => $question
+                , 'answers' => $answers, 'image' => $image]);
+        }  else {
+            echo $this->blade->run('displayquestion', ['question' => $question
+                , 'answers' => $answers, 'image' => NULL]);
+        }
     }
 
     public function search(string $searchTerm): ?array {
@@ -88,8 +99,16 @@ class QuestionController
         $title = SuperGlobalManager::getRequest("question-title");
         $message = SuperGlobalManager::getRequest("question-message");
         $userId = SuperGlobalManager::getSession("user_id");
+        $imageId = null;
+        if (isset($_FILES['question-picture']) && $_FILES['question-picture']['error'] === UPLOAD_ERR_OK) {
+            $imageId = $this->imageRepository->save('question-picture');
+        }
+        if ($imageId) {
+            $question = new Question($userId, $title, $message, 0, $imageId);
+        } else {
+            $question = new Question($userId, $title, $message);
+        }
 
-        $question = new Question($userId, $title, $message);
         $this->questionRepository->save($question);
 
         header("Location: /");
@@ -127,11 +146,15 @@ class QuestionController
             echo "You are not allowed to update this question";
             return;
         }
+        if (isset($_FILES['question-picture']) && $_FILES['question-picture']['error'] === UPLOAD_ERR_OK) {
+            $imageId = $this->imageRepository->save('question-picture');
+            $existingQuestion->imageID = $imageId;
+        }
 
-        $updatedQuestion = new Question($userId, $title, $message);
-        $updatedQuestion->id = $id;
+        $existingQuestion->title = $title;
+        $existingQuestion->message = $message;
 
-        $this->questionRepository->update($updatedQuestion);
+        $this->questionRepository->update($existingQuestion);
 
         header("Location: /my-questions");
         exit;

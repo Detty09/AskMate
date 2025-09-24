@@ -12,6 +12,7 @@ use App\Database\Connection;
 use App\Http\Router;
 use App\Http\SuperGlobalManager;
 use App\Model\User;
+use App\Repository\ImageRepository;
 use App\Repository\QuestionTagRelationRepository;
 use App\Repository\TagRepository;
 use App\Repository\UserRepository;
@@ -29,9 +30,10 @@ $questionRepository = new QuestionRepository($pdo);
 $answerRepository = new AnswerRepository($pdo);
 $tagRepository = new TagRepository($pdo);
 $questionTagRelationRepository = new QuestionTagRelationRepository($pdo);
+$imageRepository = new ImageRepository($pdo);
 
 $userController = new UserController($blade ,$userRepository);
-$questionController = new QuestionController($blade, $questionRepository, $answerRepository, $tagRepository, $questionTagRelationRepository);
+$questionController = new QuestionController($blade, $questionRepository, $answerRepository, $tagRepository, $questionTagRelationRepository, $imageRepository);
 $AnswerController = new AnswerController($blade, $answerRepository);
 $tagController = new TagController($blade, $tagRepository, $questionRepository, $questionTagRelationRepository);
 

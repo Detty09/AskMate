@@ -47,10 +47,11 @@ class QuestionRepository implements RepositoryInterface {
         }
 
         $stmt = $this->pdo->prepare("
-            INSERT INTO question (id_registered_user, title, message, vote_number) 
-            VALUES (:id_registered_user, :title, :message, :vote_number)");
+            INSERT INTO question (id_image, id_registered_user, title, message, vote_number) 
+            VALUES (:id_image, :id_registered_user, :title, :message, :vote_number)");
 
         $stmt->execute([
+            "id_image" => $entity->imageID,
             "id_registered_user" => $entity->id_registered_user,
             "title" => $entity->title,
             "message" => $entity->message,
@@ -64,11 +65,12 @@ class QuestionRepository implements RepositoryInterface {
     {
         $stmt = $this->pdo->prepare("
             UPDATE question
-            SET title = :title, message = :message
+            SET id_image = :id_image, title = :title, message = :message
             WHERE id = :id
         ");
         $stmt->execute([
             "id" => $entity->id,
+            "id_image" => $entity->imageID,
             "title" => $entity->title,
             "message" => $entity->message,
         ]);
