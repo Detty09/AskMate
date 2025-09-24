@@ -31,7 +31,7 @@ $tagRepository = new TagRepository($pdo);
 $questionTagRelationRepository = new QuestionTagRelationRepository($pdo);
 
 $userController = new UserController($blade ,$userRepository);
-$questionController = new QuestionController($blade, $questionRepository, $answerRepository, $tagRepository);
+$questionController = new QuestionController($blade, $questionRepository, $answerRepository, $tagRepository, $questionTagRelationRepository);
 $AnswerController = new AnswerController($blade, $answerRepository);
 $tagController = new TagController($blade, $tagRepository, $questionRepository, $questionTagRelationRepository);
 

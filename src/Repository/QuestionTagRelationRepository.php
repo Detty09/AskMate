@@ -6,9 +6,9 @@ use PDO;
 
 class QuestionTagRelationRepository implements RepositoryInterface
 {
-    private \PDO $connection;
+    private PDO $connection;
 
-    public function __construct(\PDO $connection) {
+    public function __construct(PDO $connection) {
         $this->connection = $connection;
     }
 
@@ -52,6 +52,9 @@ class QuestionTagRelationRepository implements RepositoryInterface
 
     public function delete(int $id): void
     {
-        // TODO: Implement delete() method.
+        $stmt = $this->connection->prepare("DELETE FROM rel_question_tag WHERE id_question = :id_question");
+        $stmt->execute([
+            "id_question" => $id
+        ]);
     }
 }
