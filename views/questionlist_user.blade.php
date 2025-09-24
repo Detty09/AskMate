@@ -10,7 +10,7 @@
         @else
             <div class="flex flex-col mt-6 w-full">
                 @foreach ($questions as $question)
-                    @include("question-item", ["question" => $question])
+                    @include("question-item", ["question" => $question, "mode" => "myquestions"])
                 @endforeach
             </div>
         @endif
