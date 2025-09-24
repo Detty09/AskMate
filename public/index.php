@@ -114,4 +114,8 @@ $router->get('/question/vote', function() use ($questionController) {
     $questionController->vote();
 });
 
+$router->get('/answer/vote', function() use ($AnswerController) {
+    $AnswerController->vote();
+});
+
 $router->dispatch($_SERVER["REQUEST_METHOD"], $_SERVER["REQUEST_URI"]);

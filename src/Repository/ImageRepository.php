@@ -16,10 +16,6 @@ class ImageRepository
 
     public function save(string $fileField = 'question-picture'): ?int
     {
-        if (!isset($_FILES[$fileField])) {
-            var_dump("No file uploaded");
-            return null;
-        }
 
         if (!isset($_FILES[$fileField]) || $_FILES[$fileField]['error'] !== UPLOAD_ERR_OK) {
             return null;
@@ -48,7 +44,7 @@ class ImageRepository
 
         $stmt = $this->pdo->prepare("
             INSERT INTO image (directory, file_name, upload_time) 
-            VALUES (:directory, :file_name, NOW())
+            VALUES (:directory, :file_name, NOW());
         ");
         $stmt->execute([
             'directory' => $this->uploadDir,
@@ -64,5 +60,21 @@ class ImageRepository
         $stmt->execute(['id' => $id]);
         $result = $stmt->fetch(PDO::FETCH_OBJ);
         return $result ?: null;
+    }
+
+    public function delete(int $id): void
+    {
+        $stmt = $this->pdo->prepare("SELECT directory, file_name FROM image WHERE id = :id");
+        $stmt->execute(['id' => $id]);
+        $image = $stmt->fetch(PDO::FETCH_OBJ);
+
+        if ($image) {
+            $filePath = __DIR__ . '/../../public' . $image->directory . $image->file_name;
+            if (file_exists($filePath)) {
+                unlink($filePath);
+            }
+            $stmt = $this->pdo->prepare("DELETE FROM image WHERE id = :id");
+            $stmt->execute(['id' => $id]);
+        }
     }
 }

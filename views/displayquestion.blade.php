@@ -48,6 +48,16 @@
                                                         </button>
                                                     </form>
                                                 </div>
+                                            @else
+                                                <div>
+                                                    <a href="/answer/vote?id={{ $answer->id }}&inc=1"
+                                                       class="text-green-400 hover:text-green-300 transition-colors text-xl transition-transform duration-100 ease-in-out transform hover:scale-105">
+                                                        <i class="fas fa-thumbs-up"></i></a>
+                                                    <a href="/answer/vote?id={{ $answer->id }}&inc=-1"
+                                                       class="text-red-400 hover:text-red-300 transition-colors text-xl transition-transform duration-100 ease-in-out transform hover:scale-105">
+                                                        <i class="fas fa-thumbs-down"></i></a>
+                                                    <span class="ml-2 text-gray-600">Votes: {{$answer->vote_number}}</span>
+                                                </div>
                                             @endif
                                         </div>
                                     </div>
