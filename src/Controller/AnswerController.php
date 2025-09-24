@@ -94,4 +94,22 @@ class AnswerController
 
         echo $this->blade->run('answer_form', ['id_question' => $id]);
     }
+
+    public function vote(): void {
+        $id = SuperGlobalManager::getRequest('id');
+        $inc = SuperGlobalManager::getRequest('inc');
+
+        if (!$id || !is_numeric($inc)) {
+            http_response_code(400);
+            echo "Invalid vote request";
+            exit;
+        }
+
+        $this->repository->increaseVote((int)$id, (int)$inc);
+        $answer = $this->repository->find((int)$id);
+        $questionId = $answer ? $answer->id_question : 0;
+
+        header("Location: /display?id=$questionId");
+        exit;
+    }
 }
