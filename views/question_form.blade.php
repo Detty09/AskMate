@@ -53,11 +53,19 @@
 
 
                 <div class="flex justify-center mt-6">
-                    <x-submit-button>Update</x-submit-button>
+                    <x-submit-button>
+                        @if ( isset($question) )
+                            Update
+                        @else
+                            Add
+                        @endif
+                    </x-submit-button>
                 </div>
             </form>
 
-            <x-add-tag></x-add-tag>
+            @if ( isset($question) )
+                <x-add-tag></x-add-tag>
+            @endif
         </div>
     <div>
 

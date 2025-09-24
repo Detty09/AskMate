@@ -3,7 +3,6 @@
         Tags
     </p>
     <div class="flex flex-row flex-wrap space-x-2 block py-2.5 px-0 max-w-max text-sm bg-transparent border-0 border-b-2 appearance-none text-white border-gray-600 focus:border-blue-500 focus:outline-none focus:ring-0 peer">
-        @if ( isset($question) )
             @foreach($questionTags as $questionTag)
                     <?php
                     $qId = $questionTag['id_question'];
@@ -14,6 +13,5 @@
                     {{ $name }}
                 </x-tag>
             @endforeach
-        @endif
     </div>
 </div>
