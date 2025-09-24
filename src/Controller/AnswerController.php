@@ -39,14 +39,19 @@ class AnswerController
         exit;
     }
 
-    public function editAnswer(int $id): string
-    {
-        $answer = $this->repository->find($id);
+    public function editAnswer(){
+        $answerId = (int) SuperGlobalManager::getRequest("id");
+    if (!$answerId) {
+        http_response_code(404);
+        echo $this->blade->run('displayquestion', ['question' => null, 'answers' => []]);
+        exit;
+    }
+        $answer = $this->repository->find($answerId);
         if (!$answer) {
             http_response_code(404);
-            return $this->blade->run('answer-edit', ['answer' => null]);
+            echo $this->blade->run('answer-edit', ['answer' => null]);
         }
-        return $this->blade->run('answer-edit', ['answer' => $answer]);
+        echo $this->blade->run('answer-edit', ['answer' => $answer]);
     }
 
     public function updateAnswer(): void {
@@ -77,5 +82,16 @@ class AnswerController
             return null;
         }
         return $answers;
+    }
+
+    public function showAnswerFrom() {
+        $id = $_SESSION['current_id_question'] ?? 0;
+        if ($id <= 0) {
+            http_response_code(404);
+            echo $this->blade->run('displayquestion', ['question' => null, 'answers' => []]);
+            return;
+        }
+
+        echo $this->blade->run('answer_form', ['id_question' => $id]);
     }
 }
