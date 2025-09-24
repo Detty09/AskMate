@@ -9,6 +9,13 @@
         <x-header>Question ID: {{$question->id}}</x-header>
     <h3>Title: {{ $question->title }}</h3>
     <p>Details: {{ $question->message }}</p>
+            @if($image)
+                <div class="my-4">
+                    <img src="{{ $image->directory . $image->file_name }}"
+                         alt="Question image"
+                         class="w-32 h-auto rounded shadow-md">
+                </div>
+            @endif
         <h3>Answers: </h3>
         @if (count($answers) > 0)
         <ul>
