@@ -73,6 +73,14 @@ class AnswerRepository implements RepositoryInterface
         $stmt->execute([':id' => $id]);
     }
 
+    public function deleteByQuestion(int $questionId): void {
+        $sql = 'DELETE FROM answer WHERE id_question = :id';
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([
+            ':id' => $questionId
+        ]);
+    }
+
     public function search(string $searchTerm): array
     {
         $sql = "SELECT a.id, a.message AS answer_message, q.id AS question_id, q.title, q.message AS question_message  FROM answer a 
