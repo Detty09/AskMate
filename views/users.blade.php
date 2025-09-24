@@ -7,7 +7,7 @@
         <x-header>Registered Users</x-header>
 
         <div class="relative overflow-x-auto shadow-md rounded-lg mt-6 border border-gray-500">
-            <table class="w-full text-2xl text-left rtl:text-right text-gray-400">
+            <table class="w-full text-xl text-left rtl:text-right text-gray-400">
                 <thead class="text-xs uppercase text-gray-400">
                 <tr>
                     <th scope="col" class="px-6 py-3 bg-gray-700">
