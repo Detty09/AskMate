@@ -2,4 +2,5 @@ config.json
 vendor
 .idea
 cache
+/public/images/questions
 
