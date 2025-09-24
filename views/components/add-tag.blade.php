@@ -2,7 +2,7 @@
     <x-error>{{ $error }}</x-error>
 @endif
 
-<div class="min-w-full flex flex-col gap-10">
+<div class="min-w-full flex flex-col">
 
     <x-tag-list></x-tag-list>
 
