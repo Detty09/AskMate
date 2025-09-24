@@ -51,6 +51,7 @@ class TagController
             $name = strtolower(SuperGlobalManager::getRequest('tag'));
 
             if ($name === '') {
+                header('Location: /edit-question?id='.$questionId);
                 echo $this->blade->run("question_form", $this->getData($question, 'Cannot add empty tag'));
                 exit;
             }
@@ -60,6 +61,7 @@ class TagController
             $existingTag = $this->tagRepository->findByName($name);
 
             if (!empty($existingTag)) {
+                header('Location: /edit-question?id='.$questionId);
                 echo $this->blade->run("question_form", $this->getData($question, 'Tag already exists!'));
                 exit;
             }
@@ -70,6 +72,7 @@ class TagController
 
         $existingRelation = $this->questionTagRelationRepository->findByQuestionIdAndTagId($questionId,$tagId);
         if (!empty($existingRelation)) {
+            header('Location: /edit-question?id='.$questionId);
             echo $this->blade->run("question_form", $this->getData($question, 'Tag already added to this question!'));
             exit;
         }
@@ -77,6 +80,7 @@ class TagController
         $questionTagRelation = new QuestionTagRelation($questionId, $tagId);
         $this->questionTagRelationRepository->save($questionTagRelation);
 
+        header('Location: /edit-question?id='.$questionId);
         echo $this->blade->run("question_form", $this->getData($question));
     }
 

@@ -7,7 +7,7 @@
         <x-header>{{ isset($question) ? "Edit question" : "Add new question" }}</x-header>
 
         <div class="flex flex-col w-full max-w-3xl p-6 mt-6 border rounded-lg bg-gray-700 border-gray-500 items-center shadow-lg">
-            <form action= {{ isset($question) ? "/update-question" : "/submit-question" }} method="POST"
+            <form action={{ isset($question) ? "/update-question" : "/submit-question" }} method="POST"
                   class="min-w-full flex flex-col gap-10"
             >
                 @csrf
@@ -45,13 +45,20 @@
 
 
                 <div class="flex justify-center mt-6">
-                    <x-submit-button>Update</x-submit-button>
+                    <x-submit-button>
+                        @if ( isset($question) )
+                            Update
+                        @else
+                            Add
+                        @endif
+                    </x-submit-button>
                 </div>
             </form>
 
-            <x-add-tag></x-add-tag>
+            @if ( isset($question) )
+                <x-add-tag></x-add-tag>
+            @endif
         </div>
-    <div>
-
+        <div>
 
 @endsection

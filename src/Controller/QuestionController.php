@@ -90,9 +90,13 @@ class QuestionController
         $userId = SuperGlobalManager::getSession("user_id");
 
         $question = new Question($userId, $title, $message);
-        $this->questionRepository->save($question);
+        $newId = $this->questionRepository->save($question);
 
-        header("Location: /");
+        $question = $this->questionRepository->find($newId);
+        $tags = $this->tagRepository->findAll();
+
+        header('Location: /edit-question?id='.$newId);
+        echo $this->blade->run("question_form", ["question" => $question, "tags" => $tags, 'questionTags' => [],]);
         exit;
     }
 

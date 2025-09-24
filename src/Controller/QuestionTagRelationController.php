@@ -35,6 +35,7 @@ class QuestionTagRelationController
             'error' => $error ?? null,
         ];
 
+        header('Location: /edit-question?id='.$questionId);
         echo $this->blade->run("question_form", $data);
 
     }
