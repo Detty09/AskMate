@@ -101,11 +101,12 @@ class QuestionController
 
         $question = $this->questionRepository->find($id);
         $tags = $this->tagRepository->findAll();
+        $questionTags = $this->questionTagRelationRepository->findByQuestionId($id);
 
         $error = $_SESSION['error'] ?? null;
         unset($_SESSION['error']);
 
-        echo $this->blade->run("question_form", ["question" => $question, "tags" => $tags, 'error' => $error]);
+        echo $this->blade->run("question_form", ["question" => $question, "tags" => $tags, 'questionTags' => $questionTags, 'error' => $error]);
     }
 
     public function updateQuestion(): void {
