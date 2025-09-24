@@ -65,4 +65,20 @@ class ImageRepository
         $result = $stmt->fetch(PDO::FETCH_OBJ);
         return $result ?: null;
     }
+
+    public function delete(int $id): void
+    {
+        $stmt = $this->pdo->prepare("SELECT directory, file_name FROM image WHERE id = :id");
+        $stmt->execute(['id' => $id]);
+        $image = $stmt->fetch(PDO::FETCH_OBJ);
+
+        if ($image) {
+            $filePath = __DIR__ . '/../../public' . $image->directory . $image->file_name;
+            if (file_exists($filePath)) {
+                unlink($filePath);
+            }
+            $stmt = $this->pdo->prepare("DELETE FROM image WHERE id = :id");
+            $stmt->execute(['id' => $id]);
+        }
+    }
 }
