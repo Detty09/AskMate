@@ -7,6 +7,7 @@ use App\Model\Question;
 use App\Repository\QuestionRepository;
 use App\Repository\AnswerRepository;
 use App\Http\SuperGlobalManager;
+use App\Repository\QuestionTagRelationRepository;
 use App\Repository\TagRepository;
 use App\View\BladeFactory;
 use eftec\bladeone\BladeOne;
@@ -19,11 +20,14 @@ class QuestionController
     private AnswerRepository $answerRepository;
     private TagRepository $tagRepository;
 
-    public function __construct(BladeOne $blade, QuestionRepository $repository, AnswerRepository $answerRepository, TagRepository $tagRepository) {
+    private QuestionTagRelationRepository $questionTagRelationRepository;
+
+    public function __construct(BladeOne $blade, QuestionRepository $repository, AnswerRepository $answerRepository, TagRepository $tagRepository, QuestionTagRelationRepository $questionTagRelationRepository) {
         $this->blade = $blade;
         $this->questionRepository = $repository;
         $this->answerRepository = $answerRepository;
         $this->tagRepository = $tagRepository;
+        $this->questionTagRelationRepository = $questionTagRelationRepository;
     }
 
     public function index() {
@@ -142,6 +146,7 @@ class QuestionController
             echo "Forbidden: You cannot delete this question.";
             exit;
         }
+        $this->questionTagRelationRepository->delete($questionId);
         $this->questionRepository->delete($questionId);
         header("Location: /my-questions");
         exit;

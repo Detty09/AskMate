@@ -61,6 +61,9 @@ class QuestionTagRelationRepository implements RepositoryInterface
 
     public function delete(int $id): void
     {
-        // TODO: Implement delete() method.
+        $stmt = $this->connection->prepare("DELETE FROM rel_question_tag WHERE id_question = :id_question");
+        $stmt->execute([
+            "id_question" => $id
+        ]);
     }
 }
