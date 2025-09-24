@@ -187,6 +187,7 @@ class QuestionController
 
         $userId = SuperGlobalManager::getSession("user_id");
         $question = $this->questionRepository->find($questionId);
+        $imageId = $question->id_image;
         if (!$question || $question->id_registered_user != $userId) {
             http_response_code(403);
             echo "Forbidden: You cannot delete this question.";
@@ -195,6 +196,9 @@ class QuestionController
         $this->questionTagRelationRepository->delete($questionId);
         $this->answerRepository->deleteByQuestion($questionId);
         $this->questionRepository->delete($questionId);
+        if($imageId) {
+            $this->imageRepository->delete($imageId);
+        }
         header("Location: /my-questions");
         exit;
     }

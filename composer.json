@@ -4,7 +4,8 @@
   "require": {
     "ext-pdo": "*",
     "psr/log": "^3.0",
-    "eftec/bladeone": "^4.19"
+    "eftec/bladeone": "^4.19",
+    "ext-fileinfo": "*"
   },
   "autoload": {
       "psr-4": {
