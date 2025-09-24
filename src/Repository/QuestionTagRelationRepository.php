@@ -6,9 +6,9 @@ use PDO;
 
 class QuestionTagRelationRepository implements RepositoryInterface
 {
-    private \PDO $connection;
+    private PDO $connection;
 
-    public function __construct(\PDO $connection) {
+    public function __construct(PDO $connection) {
         $this->connection = $connection;
     }
 
@@ -19,6 +19,15 @@ class QuestionTagRelationRepository implements RepositoryInterface
 
     public function find(int $id): ?object
     {
+    }
+
+    public function findByQuestionId(int $id): array {
+        $sql = 'SELECT id_tag, name FROM rel_question_tag WHERE id_question = :id
+                INNER JOIN tag ON rel_question_tag.id_tag = tag.id';
+        $stmt = $this->connection->prepare($sql);
+        $stmt->execute(['id' => $id]);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function findByQuestionIdAndTagId(int $questionId, int $tagId): array

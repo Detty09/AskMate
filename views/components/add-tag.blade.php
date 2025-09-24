@@ -2,6 +2,12 @@
     <x-error>{{ $error }}</x-error>
 @endif
 
+<div>
+    <p class="mt-5 text-md font-medium text-white">
+        Tags
+    </p>
+</div>
+
 <form action="/tags" method="POST" class="mt-6">
     @csrf
     <input type="hidden" name="question-id" value="{{$question->id}}">
