@@ -16,10 +16,6 @@ class ImageRepository
 
     public function save(string $fileField = 'question-picture'): ?int
     {
-        if (!isset($_FILES[$fileField])) {
-            var_dump("No file uploaded");
-            return null;
-        }
 
         if (!isset($_FILES[$fileField]) || $_FILES[$fileField]['error'] !== UPLOAD_ERR_OK) {
             return null;
@@ -48,7 +44,7 @@ class ImageRepository
 
         $stmt = $this->pdo->prepare("
             INSERT INTO image (directory, file_name, upload_time) 
-            VALUES (:directory, :file_name, NOW())
+            VALUES (:directory, :file_name, NOW());
         ");
         $stmt->execute([
             'directory' => $this->uploadDir,
