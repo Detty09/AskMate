@@ -99,6 +99,12 @@ class QuestionController
         $title = SuperGlobalManager::getRequest("question-title");
         $message = SuperGlobalManager::getRequest("question-message");
         $userId = SuperGlobalManager::getSession("user_id");
+
+        if (empty($title) || empty($message)) {
+            http_response_code(400);
+            $this->showNewQuestionForm();
+        }
+
         $imageId = null;
         if (isset($_FILES['question-picture']) && $_FILES['question-picture']['error'] === UPLOAD_ERR_OK) {
             $imageId = $this->imageRepository->save('question-picture');
@@ -137,6 +143,11 @@ class QuestionController
         $message = SuperGlobalManager::getRequest("question-message");
         $id = SuperGlobalManager::getRequest("question-id");
         $userId = SuperGlobalManager::getSession("user_id");
+
+        if (empty($title) || empty($message)) {
+            http_response_code(400);
+            $this->showUpdateQuestionForm();
+        }
 
         $existingQuestion = $this->questionRepository->find($id);
 
