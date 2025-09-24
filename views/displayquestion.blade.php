@@ -15,6 +15,13 @@
             @foreach($answers as $answer)
                 <div>
                 <li>{{$answer->message}}</li>
+                    <a href="/answer/vote?id={{ $answer->id }}&inc=1"
+                        class="text-green-400 hover:text-green-300 transition-colors text-xl transition-transform duration-100 ease-in-out transform hover:scale-105">
+                        <i class="fas fa-thumbs-up"></i></a>
+                    <a href="/answer/vote?id={{ $answer->id }}&inc=-1"
+                        class="text-red-400 hover:text-red-300 transition-colors text-xl transition-transform duration-100 ease-in-out transform hover:scale-105">
+                        <i class="fas fa-thumbs-down"></i></a>
+                    <span class="ml-2 text-gray-600">Votes: {{$answer->vote_number}}</span>
                 @if(isset($_SESSION['user_id']) && $answer->id_registered_user == $_SESSION['user_id'])
                         <form action="/answer-edit" method="GET" style="display:inline;">
                             <input type="hidden" name="id" value="{{ $answer->id }}">
