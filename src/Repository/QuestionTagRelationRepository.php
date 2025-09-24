@@ -22,8 +22,10 @@ class QuestionTagRelationRepository implements RepositoryInterface
     }
 
     public function findByQuestionId(int $id): array {
-        $sql = 'SELECT id_tag, name FROM rel_question_tag WHERE id_question = :id
-                INNER JOIN tag ON rel_question_tag.id_tag = tag.id';
+        $sql = 'SELECT id_question, id_tag, name FROM rel_question_tag
+                INNER JOIN tag ON rel_question_tag.id_tag = tag.id
+                WHERE id_question = :id';
+
         $stmt = $this->connection->prepare($sql);
         $stmt->execute(['id' => $id]);
 
@@ -65,5 +67,12 @@ class QuestionTagRelationRepository implements RepositoryInterface
         $stmt->execute([
             "id_question" => $id
         ]);
+    }
+
+    public function deleteByQuestionAndTagId(int $questionId, int $tagId): void
+    {
+        $sql = "DELETE FROM rel_question_tag WHERE id_question = :id_question AND id_tag = :id_tag";
+        $stmt = $this->connection->prepare($sql);
+        $stmt->execute(['id_question' => $questionId, 'id_tag' => $tagId]);
     }
 }
