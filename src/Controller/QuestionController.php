@@ -105,14 +105,14 @@ class QuestionController
             $this->showNewQuestionForm();
         }
 
-        $imageId = null;
+        $question = NULL;
         if (isset($_FILES['question-picture']) && $_FILES['question-picture']['error'] === UPLOAD_ERR_OK) {
             $imageId = $this->imageRepository->save('question-picture');
-        }
-        if ($imageId) {
-            $question = new Question($userId, $title, $message, 0, $imageId);
-        } else {
-            $question = new Question($userId, $title, $message);
+            if ($imageId) {
+                $question = new Question($userId, $title, $message, 0, $imageId);
+            } else {
+                $question = new Question($userId, $title, $message);
+            }
         }
 
         $newId = $this->questionRepository->save($question);
@@ -131,11 +131,17 @@ class QuestionController
         $question = $this->questionRepository->find($id);
         $tags = $this->tagRepository->findAll();
         $questionTags = $this->questionTagRelationRepository->findByQuestionId($id);
+        $imageId = $question->id_image;
+        $image = null;
+        if($imageId) {
+            $image = $this->imageRepository->find($question->id_image);
+            $question->imageID = $imageId;
+        }
 
         $error = $_SESSION['error'] ?? null;
         unset($_SESSION['error']);
 
-        echo $this->blade->run("question_form", ["question" => $question, "tags" => $tags, 'questionTags' => $questionTags, 'error' => $error]);
+        echo $this->blade->run("question_form", ["question" => $question, "image"=>$image, "tags" => $tags, 'questionTags' => $questionTags, 'error' => $error]);
     }
 
     public function updateQuestion(): void {
@@ -165,6 +171,11 @@ class QuestionController
         if (isset($_FILES['question-picture']) && $_FILES['question-picture']['error'] === UPLOAD_ERR_OK) {
             $imageId = $this->imageRepository->save('question-picture');
             $existingQuestion->imageID = $imageId;
+        } else {
+            $oldImageId = SuperGlobalManager::getRequest("old-image-id");
+            if ($oldImageId) {
+                $existingQuestion->imageID = $oldImageId;
+            }
         }
 
         $existingQuestion->title = $title;

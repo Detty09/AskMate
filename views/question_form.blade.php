@@ -42,6 +42,9 @@
                             class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 appearance-none text-white border-gray-600 focus:border-blue-500 focus:outline-none focus:ring-0 peer"
                     >
                 </div>
+                @if (isset($question) && !empty($question->imageID))
+                    <input type="hidden" name="old-image-id" value="{{ $question->imageID }}">
+                @endif
                 <div>
                     <label for="question-title" class="mt-5 text-md font-medium text-white">Upload picture</label>
                     <input
