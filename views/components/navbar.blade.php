@@ -7,20 +7,20 @@
         @if(\App\Http\SuperGlobalManager::hasSession('user_id'))
             <div class="flex items-center space-x-6 rtl:space-x-reverse">
                 <a href="/logout" class="text-sm text-blue-500 hover:underline">
-                    <button class="text-white bg-blue-700 hover:bg-blue-500 focus:outline-none font-medium rounded-full text-sm px-5 py-2.5 text-center cursor-pointer transition-transform duration-500 ease-in-out transform hover:scale-105">
-                        Logout
+                    <button class="text-white bg-blue-700 hover:bg-blue-500 focus:outline-none font-medium rounded-full text-sm px-5 py-2.5 text-center cursor-pointer transition-transform duration-100 ease-in-out transform hover:scale-105">
+                        <i class="fa-solid fa-right-from-bracket"></i>
                     </button>
                 </a>
             </div>
         @else
             <div class="flex justify-end space-x-6">
                     <a href="/login" class="text-sm  text-blue-500 hover:underline">
-                        <button class="text-white bg-blue-700 hover:bg-blue-500 font-medium rounded-full text-sm px-5 py-2.5 text-center cursor-pointer transition-transform duration-500 ease-in-out transform hover:scale-105">
+                        <button class="text-white bg-blue-700 hover:bg-blue-500 font-medium rounded-full text-sm px-5 py-2.5 text-center cursor-pointer transition-transform duration-100 ease-in-out transform hover:scale-105">
                             Login
                         </button>
                     </a>
                     <a href="/register" class="text-sm  text-blue-500 hover:underline">
-                        <button class="text-white bg-blue-700 hover:bg-blue-500 font-medium rounded-full text-sm px-5 py-2.5 text-center cursor-pointer transition-transform duration-500 ease-in-out transform hover:scale-105">
+                        <button class="text-white bg-blue-700 hover:bg-blue-500 font-medium rounded-full text-sm px-5 py-2.5 text-center cursor-pointer transition-transform duration-100 ease-in-out transform hover:scale-105">
                             Register
                         </button>
                     </a>
@@ -50,12 +50,14 @@
                     <a href="/tags" class="text-white hover:underline">List Tags</a>
                 </li>
             </ul>
-            <div class="flex ml-auto">
-                    <form action="/search" method="POST" class="flex ml-auto">
-                        <input type="text" name="value" placeholder="Search..."
-                               class="px-2 py-1 rounded-l text-black focus:outline-none focus:ring-2 focus:ring-blue-400 bg-gray-200 border border-gray-400">
-                        <x-submit-button>Submit</x-submit-button>
-                    </form>
+            <div class="flex ml-auto items-center">
+                <form action="/search" method="POST" class="flex items-center">
+                    <input type="text" name="value" placeholder="Search..."
+                           class="w-64 h-8 px-3 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-blue-400 bg-gray-200 border border-gray-400 text-sm">
+                    <button class="ml-3 w-20 h-8 px-3 text-white bg-gray-400 hover:bg-gray-200 font-medium rounded-lg text-sm text-center cursor-pointer transition-transform duration-100 ease-in-out transform hover:scale-105">
+                        Search
+                    </button>
+                </form>
             </div>
         </div>
     </div>
