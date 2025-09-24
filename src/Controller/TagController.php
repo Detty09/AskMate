@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Http\SuperGlobalManager;
+use App\Model\Question;
 use App\Model\QuestionTagRelation;
 use App\Model\Tag;
 use App\Repository\QuestionRepository;
@@ -48,13 +49,20 @@ class TagController
 
         if ($tagId === null) {
             $name = strtolower(SuperGlobalManager::getRequest('tag'));
+
+            if ($name === '') {
+                header('Location: /edit-question?id='.$questionId);
+                echo $this->blade->run("question_form", $this->getData($question, 'Cannot add empty tag'));
+                exit;
+            }
+
             $name = ucfirst($name);
 
             $existingTag = $this->tagRepository->findByName($name);
 
             if (!empty($existingTag)) {
-                SuperGlobalManager::setSession('error', 'Tag already exists!');
-                header("Location: /edit-question?id=" . $questionId);
+                header('Location: /edit-question?id='.$questionId);
+                echo $this->blade->run("question_form", $this->getData($question, 'Tag already exists!'));
                 exit;
             }
 
@@ -64,15 +72,26 @@ class TagController
 
         $existingRelation = $this->questionTagRelationRepository->findByQuestionIdAndTagId($questionId,$tagId);
         if (!empty($existingRelation)) {
-            SuperGlobalManager::setSession('error', 'Tag already added to this question!');
-            header("Location: /edit-question?id=" . $questionId);
+            header('Location: /edit-question?id='.$questionId);
+            echo $this->blade->run("question_form", $this->getData($question, 'Tag already added to this question!'));
             exit;
         }
 
         $questionTagRelation = new QuestionTagRelation($questionId, $tagId);
         $this->questionTagRelationRepository->save($questionTagRelation);
 
-        header("Location: /edit-question?id=" . $questionId);
-        echo $this->blade->run("question_form", ["question" => $question]);
+        header('Location: /edit-question?id='.$questionId);
+        echo $this->blade->run("question_form", $this->getData($question));
     }
+
+    private function getData($question, string $errorMessage = null): array
+    {
+        return [
+            'question' => $question,
+            'questionTags' => $this->questionTagRelationRepository->findByQuestionId($question->id),
+            'tags' => $this->tagRepository->findAll(),
+            'error' => $errorMessage ?? null,
+        ];
+    }
+
 }
