@@ -147,6 +147,7 @@ class QuestionController
             exit;
         }
         $this->questionTagRelationRepository->delete($questionId);
+        $this->answerRepository->deleteByQuestion($questionId);
         $this->questionRepository->delete($questionId);
         header("Location: /my-questions");
         exit;
