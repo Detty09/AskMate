@@ -35,16 +35,23 @@ class QuestionController
         return $this->blade->run('displayquestions', ['questions' => $questions]);
     }
 
-    public function show($blade, int $id): string
+    public function show()
     {
+        if (!isset($_GET['id']) || !is_numeric($_GET['id']) || (int)$_GET['id'] <= 0) {
+            http_response_code(404);
+            echo $this->blade->run('displayquestion', ['question' => null, 'answers' => []]);
+            exit;
+        }
+
+        $id = (int)$_GET['id'];
        $question = $this->questionRepository->find($id);
         if (!$question) {
             http_response_code(404);
-            return $blade->run('displayquestion', ['question' => null, 'answers' => []]);
+            echo $this->blade->run('displayquestion', ['question' => null, 'answers' => []]);
         }
         $_SESSION['current_id_question'] = $id;
         $answers = $this->answerRepository->findByQuestionId($id);
-        return $blade->run('displayquestion', ['question' => $question
+        echo $this->blade->run('displayquestion', ['question' => $question
         , 'answers' => $answers]);
     }
 

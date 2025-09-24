@@ -34,7 +34,7 @@
             <p>No answers yet.</p>
             @endif
         @if(isset($_SESSION['user_id']))
-        <a href="/add-answer" class="inline-block text-white hover:underline focus:ring-1 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2">Add answer</a>
+        <a href="/add-answer" class="inline-block text-black hover:underline focus:ring-1 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2">Add answer</a>
         @else
             <p><em>You must be logged in to add an answer.</em></p>
         @endif

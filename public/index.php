@@ -52,45 +52,18 @@ $router->get("/", function() use ($blade, $questionController) {
     echo $questionController->index();
 });
 
-$router->get("/display", function() use ($blade, $questionController) {
-    if (!isset($_GET['id']) || !is_numeric($_GET['id']) || (int)$_GET['id'] <= 0) {
-        http_response_code(404);
-        echo $blade->run('displayquestion', ['question' => null, 'answers' => []]);
-        return;
-    }
-
-    $id = (int)$_GET['id'];
-    echo $questionController->show($blade, $id);
-});
-
-$router->get("/add-answer", function() use ($blade, $questionController) {
-    $id = $_SESSION['current_id_question'] ?? 0;
-
-    if ($id <= 0 || !$questionController->show($blade, (int)$id)) {
-        http_response_code(404);
-        echo $blade->run('displayquestion', ['question' => null, 'answers' => []]);
-        return;
-    }
-
-    echo $blade->run('answer_form', ['id_question' => $id]);
-});
-
+//question detail page
+$router->get("/display", [$questionController, "show"]);
+//Add answer
+$router->get("/add-answer", [$AnswerController, "showAnswerFrom"]);
 $router->post("/submit-answer", [$AnswerController, "submitAnswer"]);
-
-$router->get("/answer-edit", function() use ($blade, $AnswerController) {
-    $answerId = (int) SuperGlobalManager::getRequest("id");
-    if (!$answerId) {
-        http_response_code(404);
-        echo $blade->run('displayquestion', ['question' => null, 'answers' => []]);
-        return;
-    }
-    echo $AnswerController->editAnswer($answerId);
-});
-
+//edit answer
+$router->get("/answer-edit", [$AnswerController, "editAnswer"]);
 $router->post("/answer-update", [$AnswerController, "updateAnswer"]);
+//delete answer
 $router->post("/answer-delete", [$AnswerController, "deleteAnswer"]);
 
-$router->post("/submit", function() use ($blade, $questionController, $AnswerController) {
+$router->post("/search", function() use ($blade, $questionController, $AnswerController) {
     $searchTerm = SuperGlobalManager::getRequest("value", "");
     $name = $_SESSION['email'] ?? "Guest";
     $questions = $questionController->search($searchTerm);
