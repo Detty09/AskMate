@@ -105,14 +105,17 @@ class QuestionController
             $this->showNewQuestionForm();
         }
 
-        $question = NULL;
+        $question = null;
+        $imageId = null;
+
         if (isset($_FILES['question-picture']) && $_FILES['question-picture']['error'] === UPLOAD_ERR_OK) {
             $imageId = $this->imageRepository->save('question-picture');
-            if ($imageId) {
-                $question = new Question($userId, $title, $message, 0, $imageId);
-            } else {
-                $question = new Question($userId, $title, $message);
-            }
+        }
+
+        if ($imageId) {
+            $question = new Question($userId, $title, $message, 0, $imageId);
+        } else {
+            $question = new Question($userId, $title, $message);
         }
 
         $newId = $this->questionRepository->save($question);
