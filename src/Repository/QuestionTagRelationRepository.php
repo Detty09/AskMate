@@ -4,7 +4,7 @@ namespace App\Repository;
 
 use PDO;
 
-class QuestionTagRelationRepository implements RepositoryInterface
+class QuestionTagRelationRepository
 {
     private PDO $connection;
 

@@ -7,16 +7,17 @@ use App\Model\User;
 use App\Repository\UserRepository;
 use eftec\bladeone\BladeOne;
 use JetBrains\PhpStorm\NoReturn;
+use App\Service\UserService;
 
 class UserController
 {
     private BladeOne $blade;
-    private UserRepository $userRepository;
+    private UserService $userService;
 
-    public function __construct(BladeOne $blade, UserRepository $userRepository)
+    public function __construct(BladeOne $blade, UserService $userService)
     {
         $this->blade = $blade;
-        $this->userRepository = $userRepository;
+        $this->userService = $userService;
     }
 
     public function create(): void
@@ -26,20 +27,16 @@ class UserController
 
     public function store(): void
     {
-        $email = $_POST['email'];
-        $confirmEmail = $_POST['email_confirmation'];
+        try {
+            $this->userService->register($_POST);
 
-        if ($email !== $confirmEmail) {
-            echo $this->blade->run("register", ['error' => 'Emails do not match']);
-            die();
-        } else {
-            $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-            $user = new User($email, $password);
+            header('Location: /login');
+            exit;
+        } catch (\Exception $e) {
 
-            $this->userRepository->save($user);
-
-            http_response_code(201);
-            echo $this->blade->run("home", ['name' => 'Guest']);
+            echo $this->blade->run('register', [
+                'error' => $e->getMessage()
+            ]);
         }
     }
 
@@ -48,30 +45,20 @@ class UserController
         echo $this->blade->run("login");
     }
 
-    public function login(): string
+    public function login(): void
     {
-        $email = $_POST['email'];
-        $password = $_POST['password'];
+        try {
 
-        //Fetch user from DB
-        $user = $this->userRepository->findByEmail($email);
-        if (!$user) {
-            echo $this->blade->run("login", ['error' => 'Invalid email or password']);
-            die();
-        }
-        //verify pw
-        if (password_verify($password, $user->password_hash)) {
-            session_regenerate_id();
-
-            SuperGlobalManager::setSession('user_id', $user->id);
-            SuperGlobalManager::setSession('email', $user->email);
+            $this->userService->login($_POST);
 
             header('Location: /');
             exit;
-        } else {
-            echo $this->blade->run("login", ['error' => 'Invalid email or password']);
+        } catch (\Exception $e) {
+
+            echo $this->blade->run('login', [
+                'error' => $e->getMessage()
+            ]);
         }
-        return '';
     }
 
     #[NoReturn]
@@ -84,25 +71,67 @@ class UserController
         exit;
     }
 
+    public function update(): void
+    {
+        $userId = SuperGlobalManager::getSession('user_id');
+
+        if (!$userId) {
+            echo $this->blade->run('login', [
+                'error' => 'You need to be logged in'
+            ]);
+            return;
+        }
+
+        try {
+            $this->userService->updateUser($userId, $_POST);
+
+            header('Location: /users');
+            exit;
+        } catch (\Exception $e) {
+
+            $user = $this->userService->getUser($userId);
+
+            echo $this->blade->run('edit-user', [
+                'error' => $e->getMessage(),
+                'user' => $user
+            ]);
+        }
+    }
+
+    public function delete(): void
+    {
+        try {
+
+            $userId = SuperGlobalManager::getSession('user_id');
+
+            $this->userService->deleteUser($userId);
+
+            header('Location: /logout');
+            exit;
+        } catch (\Exception $e) {
+
+            echo $this->blade->run('users', [
+                'error' => $e->getMessage(),
+                'users' => $this->userService->getUsers()
+            ]);
+        }
+    }
+
     public function index(): void
     {
-        if (SuperGlobalManager::hasSession('user_id')) {
-            $data = $this->userRepository->findAll();
-            $users = [];
+        if (!SuperGlobalManager::hasSession('user_id')) {
 
-            foreach ($data as $user) {
-                $users[] = [
-                    'id' => $user['id'],
-                    'email' => $user['email'],
-                    'registration_date' => $user['registration_time'],
-                    'questions' => $user['questions'] ?? 0,
-                    'answers' => $user['answers'] ?? 0,
-                ];
-            }
+            echo $this->blade->run('login', [
+                'error' => 'You need to be logged in'
+            ]);
 
-            echo $this->blade->run("users", ['users' => $users]);
-        } else {
-            echo $this->blade->run('login', ['error' => 'You need to be logged in to access this page']);
+            return;
         }
+
+        $users = $this->userService->getUsers();
+
+        echo $this->blade->run('users', [
+            'users' => $users
+        ]);
     }
 }

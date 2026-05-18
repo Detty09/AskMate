@@ -6,7 +6,7 @@ use App\Model\Answer;
 use App\Model\Question;
 use PDO;
 
-class AnswerRepository implements RepositoryInterface
+class AnswerRepository
 {
     private PDO $pdo;
     public function __construct(PDO $pdo)
