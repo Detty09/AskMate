@@ -5,7 +5,7 @@ namespace App\Repository;
 use App\Model\Question;
 use App\Repository\RepositoryInterface;
 use PDO;
-class QuestionRepository implements RepositoryInterface {
+class QuestionRepository {
 
     private PDO $pdo;
 

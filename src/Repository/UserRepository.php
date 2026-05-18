@@ -6,7 +6,7 @@ use App\Database\Connection;
 use App\Model\User;
 use PDO;
 
-class UserRepository implements RepositoryInterface
+class UserRepository
 {
 
     private PDO $connection;
@@ -31,35 +31,66 @@ class UserRepository implements RepositoryInterface
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function find(int $id): object
+    public function find(int $id): ?User
     {
-        // TODO: Implement find() method.
+        $sql = "SELECT * FROM registered_user WHERE id = :id";
+        $stmt = $this->connection->prepare($sql);
+        $stmt->execute(['id' => $id]);
+
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$data) {
+            return null;
+        }
+
+        return new User($data['email'], $data['password_hash'], $data['id']);
     }
 
-    public function findByEmail(string $email): object
+    public function findByEmail(string $email): ?User
     {
         $sql = "SELECT * FROM registered_user WHERE email = :email";
         $stmt = $this->connection->prepare($sql);
         $stmt->execute(['email' => $email]);
-        return $stmt->fetch(PDO::FETCH_OBJ);
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$data) {
+            return null;
+        }
+
+        return new User($data['email'], $data['password_hash'], $data['id']);
     }
 
-    public function save(object $entity): int
+
+    public function save(User $user): int
     {
         $sql = "INSERT INTO registered_user (email, password_hash) VALUES (?,?)";
         $stmt = $this->connection->prepare($sql);
-        $stmt->execute([$entity->getEmail(), $entity->getPassword()]);
+        $stmt->execute([$user->getEmail(), $user->getPassword()]);
 
         return $this->connection->lastInsertId();
     }
 
-    public function update(object $entity): void
+    public function update(User $user): void
     {
         // TODO: Implement update() method.
+        $sql = "UPDATE registered_user SET email = :email, password_hash = :password_hash WHERE id = :id";
+
+        $stmt = $this->connection->prepare($sql);
+
+        $stmt->execute([
+            'email' => $user->getEmail(),
+            'password_hash' => $user->getPassword(),
+            'id' => $user->getId()
+        ]);
     }
 
     public function delete(int $id): void
     {
         // TODO: Implement delete() method.
+        $sql = "DELETE FROM registered_user WHERE id = :id";
+
+        $stmt = $this->connection->prepare($sql);
+
+        $stmt->execute(['id' => $id]);
     }
 }

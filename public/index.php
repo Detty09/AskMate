@@ -21,6 +21,7 @@ use App\Repository\QuestionRepository;
 use App\Repository\AnswerRepository;
 use App\Security\FilterManager;
 use App\View\BladeFactory;
+use App\Service\UserService;
 
 
 session_start();
@@ -33,8 +34,9 @@ $answerRepository = new AnswerRepository($pdo);
 $tagRepository = new TagRepository($pdo);
 $questionTagRelationRepository = new QuestionTagRelationRepository($pdo);
 $imageRepository = new ImageRepository($pdo);
+$userService = new UserService($userRepository);
 
-$userController = new UserController($blade ,$userRepository);
+$userController = new UserController($blade ,$userService);
 $questionController = new QuestionController($blade, $questionRepository, $answerRepository, $tagRepository, $questionTagRelationRepository, $imageRepository);
 $AnswerController = new AnswerController($blade, $answerRepository);
 $tagController = new TagController($blade, $tagRepository, $questionRepository, $questionTagRelationRepository);
