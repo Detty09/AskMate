@@ -1,0 +1,41 @@
+version: "3.8"
+
+services:
+    app:
+        build: .
+        container_name: askmate_app
+        depends_on:
+            - db
+        environment:
+          DB_HOST: ${DB_HOST}
+          DB_NAME: ${DB_NAME}
+          DB_USER: ${DB_USER}
+          DB_PASS: ${DB_PASS}
+
+    web:
+        image: nginx:alpine
+        container_name: askmate_nginx
+        ports:
+            - "8080:80"
+        volumes:
+            - .:/var/www
+            - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+        depends_on:
+            - app
+
+    db:
+        image: mysql:8
+        container_name: askmate_db
+        restart: always
+        environment:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: ${DB_NAME}
+          MYSQL_USER: ${DB_USER}
+          MYSQL_PASSWORD: ${DB_PASS}
+        volumes:
+            - db_data:/var/lib/mysql
+            - ./src/Database/schema.sql:/docker-entrypoint-initdb.d/schema.sql:ro
+  
+
+volumes:
+    db_data:

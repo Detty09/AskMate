@@ -1,0 +1,4 @@
+DB_HOST=db
+DB_NAME=ask_mate_again
+DB_USER=username
+DB_PASS=password

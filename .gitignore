@@ -4,4 +4,7 @@ vendor
 /public/images/questions
 /cache/*
 !/cache/.gitkeep
+.env
+
+
 
