@@ -2,7 +2,7 @@
     <div class="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl p-4">
         <a href="/" class="flex items-center space-x-3 rtl:space-x-reverse">
             <img src="/images/logo.png" class="h-8" alt="Codecool Logo"/>
-            <span class="self-center text-2xl font-semibold whitespace-nowrap text-white">Attendance->No</span>
+            <span class="self-center text-2xl font-semibold whitespace-nowrap text-white">AskMate</span>
         </a>
         @if(\App\Http\SuperGlobalManager::hasSession('user_id'))
             <div class="flex items-center space-x-6 rtl:space-x-reverse">

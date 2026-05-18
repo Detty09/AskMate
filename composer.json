@@ -1,5 +1,5 @@
 {
-  "name": "botibrindza/you-got-framed-php",
+  "name": "berna/ask-mate",
   "type": "project",
   "require": {
     "ext-pdo": "*",
