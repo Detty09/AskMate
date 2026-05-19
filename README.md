@@ -25,7 +25,7 @@
 <h3 align="center">Ask_Mate</h3>
 
   <p align="center">
-    Backend for in progress project
+    In progress project
     <br />
 </div>
 
@@ -82,7 +82,7 @@ Ask_mate website to ask questions, give answers, upload pictures to the question
 
 1. Clone the repo
     ```sh
-    git clone
+    git clone https://github.com/Detty09/AskMate.git
     ```
 2. Create the environment file
     ```sh
