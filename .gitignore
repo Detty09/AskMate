@@ -1,9 +1,3 @@
-config.json
-vendor
-.idea
-/public/images/questions
-/cache/*
-!/cache/.gitkeep
 .env
 
 
