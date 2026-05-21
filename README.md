@@ -129,8 +129,8 @@ Ask_mate website to ask questions, give answers, upload pictures to the question
 [license-url]: https://github.com/github_username/repo_name/blob/master/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/linkedin_username
-[product-screenshot]: /public/images/mainpage.png
-[search-screenshot]: /public/images/search.png
+[product-screenshot]: /app/public/images/mainpage.png
+[search-screenshot]: /app/public/images/search.png
 
 <!-- Shields.io badges. You can a comprehensive list with many more badges at: https://github.com/inttter/md-badges -->
 
