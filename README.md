@@ -61,7 +61,7 @@
 
 ## About The Project
  
-<!--[![Product Name Screen Shot][product-screenshot]](https://example.com)-->
+![Product Name Screen Shot][product-screenshot]
 
 Ask_mate website to ask questions, give answers, upload pictures to the questions, vote on questions and answers. Using PHP.
 
@@ -101,6 +101,7 @@ Ask_mate website to ask questions, give answers, upload pictures to the question
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+![search][search-screenshot]
 
 <!-- CONTACT -->
 
@@ -128,7 +129,8 @@ Ask_mate website to ask questions, give answers, upload pictures to the question
 [license-url]: https://github.com/github_username/repo_name/blob/master/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/linkedin_username
-[product-screenshot]: images/screenshot.png
+[product-screenshot]: /public/images/mainpage.png
+[search-screenshot]: /public/images/search.png
 
 <!-- Shields.io badges. You can a comprehensive list with many more badges at: https://github.com/inttter/md-badges -->
 
